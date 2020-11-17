@@ -47,16 +47,20 @@ let cube = [
     "green",
   ],
   ["blue", "blue", "blue", "blue", "blue", "blue", "blue", "blue", "blue"],
-  // left
-  // back
-  // down
 
-  // up
+  /*top 
+   face
+   bottom
+   back
+   right
+   left
+  */
+  
 ];
-
+let moves = [];
 // ToDO visualize scramble in 2d
 const rotate = (direction, lane) => {
-  console.log(direction, lane, cube);
+  // console.log(direction, lane, cube);
   const prev = cube.map((arr) => arr.slice());
   for (let j = lane * 3 - 3; j < lane * 3; j++) {
     if (direction == "r") {
@@ -69,6 +73,19 @@ const rotate = (direction, lane) => {
       cube[3][j] = prev[5][j];
       cube[4][j] = prev[3][j];
       cube[5][j] = prev[1][j];
+    }
+  }
+  for (let j = 0; j < 9; j += 3) {
+    if (direction == "fC") {
+      cube[2][j] = prev[4][j];
+      cube[3][j] = prev[5][j];
+      cube[4][j] = prev[3][j];
+      cube[5][j] = prev[2][j];
+    } else if (direction == "fA") {
+      cube[2][j] = prev[5][j];
+      cube[3][j] = prev[4][j];
+      cube[4][j] = prev[2][j];
+      cube[5][j] = prev[3][j];
     }
   }
   for (let i = 0; i < 4; i++) {
@@ -86,23 +103,25 @@ const rotate = (direction, lane) => {
       }
     }
   }
-  console.log(cube == prev);
+  // console.log(cube == prev);
 };
 
 const scramble = () => {
   // console.log(idx, directions[idx]);
-  let moves = Math.floor(Math.random() * (100 - 0 + 1) + 1);
-  console.log("moves: ", moves);
+  // let moves = Math.floor(Math.random() * (100 - 0 + 1) + 1);
+  // console.log("moves: ", moves);
   // moves = 2;
-  let i = 0;
-  while (i < moves) {
-    i++;
-    let direction_idx = Math.floor(Math.random() * (3 - 0 + 1) + 0);
-    let lane_idx = Math.floor(Math.random() * (2 - 1 + 1) + 1);
-    let directions = ["u", "d", "l", "r"];
-    rotate(directions[direction_idx], lane_idx);
-    console.log(cube);
-  }
+  let direction_idx = Math.floor(Math.random() * (5 - 0 + 1) + 0);
+  let lane_idx = Math.floor(Math.random() * (2 - 1 + 1) + 1);
+  let directions = ["u", "d", "l", "r", "fC", "fA"];
+  rotate(directions[direction_idx], lane_idx);
+  moves.push(directions[direction_idx] + lane_idx);
+  // console.log(cube);
 };
-rotate("d", 1);
-scramble();
+
+// rotate("fA", 1);
+// scramble();
+const solveXd = () => {
+  console.log(moves);
+};
+solveXd()
