@@ -55,7 +55,6 @@ let cube = [
    right
    left
   */
-  
 ];
 let moves = [];
 // ToDO visualize scramble in 2d
@@ -106,22 +105,73 @@ const rotate = (direction, lane) => {
   // console.log(cube == prev);
 };
 
-const scramble = () => {
+function scramble(num) {
   // console.log(idx, directions[idx]);
   // let moves = Math.floor(Math.random() * (100 - 0 + 1) + 1);
   // console.log("moves: ", moves);
   // moves = 2;
-  let direction_idx = Math.floor(Math.random() * (5 - 0 + 1) + 0);
-  let lane_idx = Math.floor(Math.random() * (2 - 1 + 1) + 1);
-  let directions = ["u", "d", "l", "r", "fC", "fA"];
-  rotate(directions[direction_idx], lane_idx);
-  moves.push(directions[direction_idx] + lane_idx);
-  // console.log(cube);
-};
+  let i = 0;
+  while (i < num) {
+    i++;
+    let direction_idx = Math.floor(Math.random() * (5 - 0 + 1) + 0);
+    let lane_idx = Math.floor(Math.random() * (3 - 1 + 1) + 1);
+    let directions = ["u", "d", "l", "r", "fC", "fA"];
+    if (lane_idx !== 2) {
+      rotate(directions[direction_idx], lane_idx);
+      moves.push(directions[direction_idx] + lane_idx);
+    }
+  }
+}
 
 // rotate("fA", 1);
 // scramble();
 const solveXd = () => {
   console.log(moves);
 };
-solveXd()
+solveXd();
+
+// left right rotations needed
+// restructure directions to official terminology
+const whiteCross = () => {
+  let end = [0, "white", 0, "white", "white", "white", 0, "white", 0];
+  console.log(cube[2][1], end[1], cube);
+  let filtered = [];
+  for (let i = 0; i < cube[2].length; i++) {
+    if (cube[2][i] != "white") {
+      filtered.push(0);
+    } else {
+      filtered.push("white");
+    }
+  }
+  console.log(filtered);
+
+  // console.log(cube);
+  console.log(moves);
+};
+
+const checkCross = () => {
+  let cross = [0, "white", 0, "white", "white", "white", 0, "white", 0];
+  let edge = [0, 0, 0, 0, "orange", 0, 0, "orange", 0];
+  // console.log(cube[2][1], cross[1], cube);
+  let edgeFilter = [];
+  let filtered = [];
+  for (let i = 0; i < 9; i++) {
+    if (edge[i] === 0 && cube[3][i] === "orange") {
+      edgeFilter.push(0);
+    }
+    if (cube[3][i] !== "orange") {
+      edgeFilter.push(0);
+    } else {
+      edgeFilter.push("orange");
+    }
+    if (cross[i] === 0 && cube[2][i] === "white") {
+      filtered.push(0);
+    }
+    if (cube[2][i] != "white") {
+      filtered.push(0);
+    } else {
+      filtered.push("white");
+    }
+  }
+  return cross.join() === filtered.join();
+};

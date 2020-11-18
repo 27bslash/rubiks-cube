@@ -1,30 +1,26 @@
 function setup() {
-  frameRate(10);
+  frameRate(60);
   createCanvas(window.innerWidth, window.innerHeight);
   background(200);
-  let sqWidth = 100;
-  for (let i = 0; i < cube.length; i++) {
-    rectMode(CORNER);
-    // rect(i * 305, 0, 300);
-
-    for (let j = 0; j < cube[i].length; j++) {
-      rectMode(CORNER);
-      let y;
-      if (j < 3) {
-        y = 0;
-      } else if (j < 6) {
-        y = 100;
-      } else if (j < 9) {
-        y = 200;
-      }
-      fill(cube[i][j]);
-      rect((j % 3) * sqWidth + i * 305, y, sqWidth);
-    }
+  drawCube();
+  button = createButton("scramble");
+  // button.mousePressed(scramble(40));
+  button.position(400, 400);
+  for (let i = 0; i < 40; i++) {
+    // scramble(1);
   }
 }
-
+// console.log(moves);
 function draw() {
   drawCube();
+  // whiteCross();
+  // if (!checkCross()) {
+  //   scramble(1);
+  // }
+  if (checkCross()) {
+    console.log("check");
+    // noLoop();
+  }
   // scramble();
   // solveXd()
   // rotateX(frameCount * 0.01);
