@@ -1,33 +1,31 @@
 function setup() {
-  frameRate(60);
+  frameRate();
   createCanvas(window.innerWidth, window.innerHeight);
   background(200);
-  drawCube();
-  button = createButton("scramble");
+  // drawCube();
+  // button = createButton("scramble");
   // button.mousePressed(scramble(40));
-  button.position(400, 400);
+  // button.position(400, 400);
   for (let i = 0; i < 40; i++) {
     // scramble(1);
   }
 }
 // console.log(moves);
+let d = 0;
 function draw() {
   drawCube();
-  // whiteCross();
-  // if (!checkCross()) {
-  //   scramble(1);
-  // }
-  if (checkCross()) {
-    console.log("check");
-    // noLoop();
+  if (!checkCross()) {
+    scramble(1);
+    edges("white");
   }
-  // scramble();
-  // solveXd()
-  // rotateX(frameCount * 0.01);
-  // rotateY(frameCount * 0.01);
-  // fill("blue");
-  // box(500);
+  if (d > depth) {
+    console.log("test");
+    noLoop();
+  }
+  d++;
+  if (arrays.length > 10000) noLoop();
 }
+
 const drawCube = () => {
   let sqWidth = 100;
   for (let i = 0; i < cube.length; i++) {
@@ -46,8 +44,7 @@ const drawCube = () => {
       } else if (j < 9) {
         y = 200;
       }
-      // console.log(y, (j % 3) * 100 + i * 305);
-      fill(cube[i][j]);
+      fill(arrays[d][i][j]);
       rect((j % 3) * sqWidth + i * 305, y, sqWidth);
     }
   }
