@@ -6,7 +6,7 @@ function setup() {
   // button = createButton("scramble");
   // button.mousePressed(scramble(40));
   // button.position(400, 400);
-  for (let i = 0; i < 40; i++) {
+  for (let i = 0; i < 20; i++) {
     // scramble(1);
   }
 }
@@ -15,14 +15,14 @@ let d = 0;
 function draw() {
   drawCube();
   if (!checkCross()) {
-    scramble(1);
-    edges("white");
+    // edges("white");
   }
-  if (d > depth) {
-    console.log("test");
-    noLoop();
+  scramble(1);
+  if (d >= depth) {
+    // noLoop();
+  } else {
+    d++;
   }
-  d++;
   if (arrays.length > 10000) noLoop();
 }
 
