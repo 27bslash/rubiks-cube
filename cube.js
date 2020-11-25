@@ -56,6 +56,75 @@ let cube = [
    left
   */
 ];
+let cuibe = [
+  [
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+  ],
+  [
+    "black",
+    "red",
+    "black",
+    "black",
+    "blue",
+    "black",
+    "black",
+    "white",
+    "black",
+  ],
+  [
+    "black",
+    "black",
+    "black",
+    "black",
+    "white",
+    "black",
+    "black",
+    "black",
+    "black",
+  ],
+  [
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+  ],
+  // right
+  [
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+  ],
+  [
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+    "black",
+  ],
+];
 let moves = [],
   arrays = [],
   depth = 0;
@@ -68,39 +137,51 @@ const rotate = (direction, lane) => {
   switch (direction) {
     case "U":
       lane = 1;
+      cube[0] = rotate_face([...cube[0]], "cw");
       break;
     case "U'":
       lane = 1;
+      cube[0] = rotate_face([...cube[0]], "ac");
       break;
     case "D":
       lane = 3;
+      cube[2] = rotate_face([...cube[2]], "cw");
       break;
     case "D'":
       lane = 3;
+      cube[2] = rotate_face([...cube[2]], "ac");
       break;
     case "L":
       lane = 1;
+      cube[5] = rotate_face([...cube[5]], "cw");
       break;
     case "L'":
       lane = 1;
+      cube[5] = rotate_face([...cube[5]], "ac");
       break;
     case "R":
       lane = 3;
+      cube[4] = rotate_face([...cube[4]], "cw");
       break;
     case "R'":
       lane = 3;
+      cube[4] = rotate_face([...cube[4]], "ac");
       break;
     case "F":
       lane = 1;
+      cube[1] = rotate_face([...cube[1]], "cw");
       break;
     case "F'":
       lane = 1;
+      cube[1] = rotate_face([...cube[1]], "ac");
       break;
     case "B":
       lane = 3;
+      cube[3] = rotate_face([...cube[3]], "ac");
       break;
     case "B'":
       lane = 3;
+      cube[3] = rotate_face([...cube[3]], "cw");
       break;
     default:
       break;
@@ -159,7 +240,6 @@ const rotate = (direction, lane) => {
       }
     }
   }
-  console.log(cube == prev);
   arrays.push(cube.map((arr) => arr.slice()));
   // console.log(arrays);
   depth++;
@@ -301,5 +381,9 @@ const edges = (colour) => {
   }
 };
 edges("white");
-moveList("F U D R L'");
+// moveList("F U D R L'");
 // console.log(arrays);
+const move_translator = () => {
+  let moveList = "F U' R U";
+};
+
