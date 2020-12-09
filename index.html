@@ -7,11 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
     <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.min.js"></script>
-    <script src="cube.js"></script>
+
     <script src="face_rotation.js"></script>
+    <script src="cube.js"></script>
+    <script src="whitecross.js"></script>
+    <script src="whitecorners.js"></script>
     <script src="sketch.js"></script>
 
-    <button onclick="scramble(50)">scramble</button>
+    <button onclick="scramble(20)">scramble</button>
     <button onclick="rotate('F')">front</button>
     <button onclick="rotate(`F'`)">front A</button>
     <button onclick="rotate('U')">Up</button>
@@ -24,6 +27,8 @@
     <button onclick="rotate(`R'`)">Right Ac</button>
     <button onclick="rotate('B')">back</button>
     <button onclick="rotate(`B'`)">back C</button>
+    <button onclick="edges(`white`)">edges C</button>
+    <button onclick="line_edges_up()">line C</button>
   </head>
   <body></body>
 </html>
