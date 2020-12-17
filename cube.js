@@ -191,16 +191,18 @@ const rotate = (direction, lane) => {
   }
 
   for (let j = lane * 3 - 3; j < lane * 3; j++) {
+    let num_to_reverse = 2;
+    if (lane > 1) num_to_reverse = 9;
     if (direction == "D'" || direction == "U'") {
-      cube[1][j] = prev[5][j];
+      cube[1][j] = prev[5][num_to_reverse - j];
       cube[3][j] = prev[4][j];
-      cube[4][j] = prev[1][j];
+      cube[4][j] = prev[1][num_to_reverse - j];
       cube[5][j] = prev[3][j];
     } else if (direction == "D" || direction === "U") {
       cube[1][j] = prev[4][j];
       cube[3][j] = prev[5][j];
-      cube[4][j] = prev[3][j];
-      cube[5][j] = prev[1][j];
+      cube[4][j] = prev[3][num_to_reverse - j];
+      cube[5][j] = prev[1][num_to_reverse - j];
     }
   }
   for (let j = lane * 3 - 3; j < lane * 3; j++) {
@@ -208,42 +210,32 @@ const rotate = (direction, lane) => {
       left_added = 6;
     if (direction === "B'" || direction === "B") (left_added = -6), (added = 2);
     if (direction == "F" || direction === "B'") {
-      // console.log(j + left_added, (j % 3) * 3 + added);
-      cube[0][j + left_added] = prev[5][(j % 3) * 3 + added];
-      cube[2][j + left_added] = prev[4][(j % 3) * 3 + added];
+      console.log(j + left_added, (j % 3) * 3 + added);
+      cube[0][j + left_added] = prev[5][6 - (j % 3) * 3 + added];
+      cube[2][j + left_added] = prev[4][6 - (j % 3) * 3 + added];
       cube[4][(j % 3) * 3 + added] = prev[0][j + left_added];
       cube[5][(j % 3) * 3 + added] = prev[2][j + left_added];
     } else if (direction == "F'" || direction === "B") {
       // console.log(j, left_added, added);
       cube[2][j + left_added] = prev[5][(j % 3) * 3 + added];
       cube[0][j + left_added] = prev[4][(j % 3) * 3 + added];
-      cube[4][(j % 3) * 3 + added] = prev[2][j + left_added];
-      cube[5][(j % 3) * 3 + added] = prev[0][j + left_added];
-      // console.log(
-      //   j,
-      //   (j % 3) * 3,
-      //   "curr: ",
-      //   cube[2][j],
-      //   "pre: ",
-      //   prev[5][j],
-      //   "prev: ",
-      //   prev[2]
-      // );
+      cube[4][6 - (j % 3) * 3 + added] = prev[2][j + left_added];
+      cube[5][6 - (j % 3) * 3 + added] = prev[0][j + left_added];
     }
   }
-  for (let i = 0; i < 4; i++) {
-    for (let j = lane - 1; j < 9; j += 3) {
-      if (direction == "L'" || direction === "R'") {
-        if (i < 3) {
-          cube[0][j] = prev[3][j];
-          cube[i + 1][j] = prev[i][j];
-        }
-      } else if (direction == "L" || direction === "R") {
-        if (i < 3) {
-          cube[3][j] = prev[0][j];
-          cube[i][j] = prev[i + 1][j];
-        }
-      }
+  for (let j = lane - 1; j < cube[0].length; j += 3) {
+    let num_to_reverse = 6;
+    if (lane > 1) num_to_reverse = 10;
+    if (direction === "L" || direction === "R") {
+      cube[0][j] = prev[1][j];
+      cube[1][j] = prev[2][num_to_reverse - j];
+      cube[2][j] = prev[3][j];
+      cube[3][j] = prev[0][num_to_reverse - j];
+    } else if (direction === "L'" || direction === "R'") {
+      cube[0][j] = prev[3][num_to_reverse - j];
+      cube[1][j] = prev[0][j];
+      cube[2][j] = prev[1][num_to_reverse - j];
+      cube[3][j] = prev[2][j];
     }
   }
   arrays.push(cube.map((arr) => arr.slice()));
@@ -359,33 +351,33 @@ const move_translator = (location, moves) => {
       if (moves.includes("F")) {
         moves = moves.split("'").length > 1 ? "R'" : "R";
       } else if (moves.includes("R")) {
-        moves = moves.split("'").length > 1 ? "F'" : "F";
-      } else if (moves.includes("L")) {
-        moves = moves.split("'").length > 1 ? "B" : "B'";
-      } else if (moves.includes("B")) {
-        //    these have the highest chance of being wrong
-        moves = moves.split("'").length > 1 ? "L'" : "L";
-      }
-      break;
-    case "blue":
-      if (moves.includes("F")) {
-        moves = moves.split("'").length > 1 ? "L'" : "L";
-      } else if (moves.includes("R")) {
         moves = moves.split("'").length > 1 ? "B'" : "B";
       } else if (moves.includes("L")) {
         moves = moves.split("'").length > 1 ? "F'" : "F";
       } else if (moves.includes("B")) {
         //    these have the highest chance of being wrong
-        moves = moves.split("'").length > 1 ? "R'" : "R";
+        moves = moves.split("'").length > 1 ? "L" : "L'";
+      }
+      break;
+    case "blue":
+      if (moves.includes("F")) {
+        moves = moves.split("'").length > 1 ? "L" : "L'";
+      } else if (moves.includes("R")) {
+        moves = moves.split("'").length > 1 ? "F'" : "F";
+      } else if (moves.includes("L")) {
+        moves = moves.split("'").length > 1 ? "B" : "B'";
+      } else if (moves.includes("B")) {
+        //    these have the highest chance of being wrong
+        moves = moves.split("'").length > 1 ? "R" : "R'";
       }
       break;
     case "orange":
       if (moves.includes("F")) {
-        moves = moves.split("'").length > 1 ? "B" : "B'";
+        moves = moves.split("'").length > 1 ? "B'" : "B";
       } else if (moves.includes("L")) {
-        moves = moves.split("'").length > 1 ? "L" : "L'";
-      } else if (moves.includes("R")) {
         moves = moves.split("'").length > 1 ? "R" : "R'";
+      } else if (moves.includes("R")) {
+        moves = moves.split("'").length > 1 ? "L" : "L'";
       } else if (moves.includes("B")) {
         moves = moves.split("'").length > 1 ? "F" : "F'";
       } else if (moves.includes("U")) {
@@ -397,7 +389,7 @@ const move_translator = (location, moves) => {
     default:
       return moves;
   }
-  // console.log(moves);
+  console.log(moves);
   return moves;
 };
 // moveList("F R D U F");
