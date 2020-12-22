@@ -59,13 +59,13 @@ let cube = [
 let test_cube = [
   [
     "black",
-    "white",
+    "black",
     "black",
     "black",
     "yellow",
     "black",
     "black",
-    "white",
+    "black",
     "black",
   ],
   [
@@ -81,18 +81,18 @@ let test_cube = [
   ],
   [
     "black",
-    "white",
+    "black",
+    "black",
     "black",
     "white",
-    "white",
-    "white",
     "black",
-    "white",
+    "black",
+    "black",
     "black",
   ],
   [
     "black",
-    "black",
+    "white",
     "black",
     "black",
     "orange",
@@ -180,11 +180,11 @@ const rotate = (direction, lane) => {
       break;
     case "B":
       lane = 3;
-      cube[3] = rotate_face([...cube[3]], "ac");
+      cube[3] = rotate_face([...cube[3]], "cw");
       break;
     case "B'":
       lane = 3;
-      cube[3] = rotate_face([...cube[3]], "cw");
+      cube[3] = rotate_face([...cube[3]], "ac");
       break;
     default:
       break;
@@ -192,16 +192,17 @@ const rotate = (direction, lane) => {
 
   for (let j = lane * 3 - 3; j < lane * 3; j++) {
     let num_to_reverse = 2;
-    if (lane > 1) num_to_reverse = 9;
+    if (lane > 1) num_to_reverse = 14;
     if (direction == "D'" || direction == "U'") {
       cube[1][j] = prev[5][num_to_reverse - j];
-      cube[3][j] = prev[4][j];
-      cube[4][j] = prev[1][num_to_reverse - j];
+      cube[3][j] = prev[4][num_to_reverse - j];
+      cube[4][j] = prev[1][j];
       cube[5][j] = prev[3][j];
-    } else if (direction == "D" || direction === "U") {
+    } else if (direction === "D" || direction === "U") {
+      console.log("D", num_to_reverse - j);
       cube[1][j] = prev[4][j];
-      cube[3][j] = prev[5][j];
-      cube[4][j] = prev[3][num_to_reverse - j];
+      cube[3][j] = prev[5][num_to_reverse - j];
+      cube[4][j] = prev[3][j];
       cube[5][j] = prev[1][num_to_reverse - j];
     }
   }
@@ -224,18 +225,22 @@ const rotate = (direction, lane) => {
     }
   }
   for (let j = lane - 1; j < cube[0].length; j += 3) {
-    let num_to_reverse = 6;
-    if (lane > 1) num_to_reverse = 10;
+    let num_to_reverse = 6,
+      k_added = 10,
+      k = j + 2;
+    // 0 3 6 > 2 5 8
+    if (lane > 1) (num_to_reverse = 10), (k_added = 6), (k = j - 2);
+    console.log(j, k_added, k_added - k);
     if (direction === "L" || direction === "R") {
       cube[0][j] = prev[1][j];
       cube[1][j] = prev[2][num_to_reverse - j];
-      cube[2][j] = prev[3][j];
-      cube[3][j] = prev[0][num_to_reverse - j];
+      cube[2][num_to_reverse - j] = prev[3][k_added - k];
+      cube[3][k_added - k] = prev[0][j];
     } else if (direction === "L'" || direction === "R'") {
-      cube[0][j] = prev[3][num_to_reverse - j];
+      cube[0][j] = prev[3][k_added - k];
       cube[1][j] = prev[0][j];
       cube[2][j] = prev[1][num_to_reverse - j];
-      cube[3][j] = prev[2][j];
+      cube[3][k_added - k] = prev[2][num_to_reverse - j];
     }
   }
   arrays.push(cube.map((arr) => arr.slice()));

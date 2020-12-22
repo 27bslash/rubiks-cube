@@ -36,7 +36,7 @@ const rotate_top_layer = (face, i) => {
           moveList("F", face);
       } else if (i === 3) {
         if (check_edges(face, i)) {
-          return face === "green" ? moveList("R", face) : moveList("L'", face);
+          return face === "green" ? moveList("F") : moveList("F");
         }
         if (!check_edges(face, i)) {
           // console.log("rotate top");
@@ -44,7 +44,7 @@ const rotate_top_layer = (face, i) => {
         }
       } else if (i === 5) {
         if (check_edges(face, i)) {
-          return face === "green" ? moveList("L", face) : moveList("R", face);
+          return face === "green" ? moveList("B'") : moveList("B'");
         }
       }
       if (!check_edges(face, i)) {
@@ -53,6 +53,7 @@ const rotate_top_layer = (face, i) => {
       }
     } else {
       if (i === 1 || i === 7) {
+        console.log(face);
         return face.includes("white")
           ? moveList("D'", face)
           : moveList("F", face);
