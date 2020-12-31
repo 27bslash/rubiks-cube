@@ -1,17 +1,27 @@
 let cube = [
   // face
   [
-    "yellow",
-    "yellow",
-    "yellow",
-    "yellow",
-    "yellow",
-    "yellow",
-    "yellow",
-    "yellow",
-    "yellow",
+    "yellow_0",
+    "yellow_1",
+    "yellow_2",
+    "yellow_3",
+    "yellow_4",
+    "yellow_5",
+    "yellow_6",
+    "yellow_7",
+    "yellow_8",
   ],
-  ["red", "red", "red", "red", "red", "red", "red", "red", "red"],
+  [
+    "red_0",
+    "red_1",
+    "red_2",
+    "red_3",
+    "red_4",
+    "red_5",
+    "red_6",
+    "red_7",
+    "red_8",
+  ],
   [
     "white_0",
     "white_1",
@@ -24,29 +34,39 @@ let cube = [
     "white_8",
   ],
   [
-    "orange",
-    "orange",
-    "orange",
-    "orange",
-    "orange",
-    "orange",
-    "orange",
-    "orange",
-    "orange",
+    "orange_0",
+    "orange_1",
+    "orange_2",
+    "orange_3",
+    "orange_4",
+    "orange_5",
+    "orange_6",
+    "orange_7",
+    "orange_8",
   ],
   // right
   [
-    "green",
-    "green",
-    "green",
-    "green",
-    "green",
-    "green",
-    "green",
-    "green",
-    "green",
+    "green_0",
+    "green_1",
+    "green_2",
+    "green_3",
+    "green_4",
+    "green_5",
+    "green_6",
+    "green_7",
+    "green_8",
   ],
-  ["blue", "blue", "blue", "blue", "blue", "blue", "blue", "blue", "blue"],
+  [
+    "blue_0",
+    "blue_1",
+    "blue_2",
+    "blue_3",
+    "blue_4",
+    "blue_5",
+    "blue_6",
+    "blue_7",
+    "blue_8",
+  ],
 
   /*top 
    face
@@ -69,7 +89,7 @@ let test_cube = [
     "black",
   ],
   [
-    "black",
+    "white_6",
     "black",
     "black",
     "black",
@@ -92,7 +112,7 @@ let test_cube = [
   ],
   [
     "black",
-    "white",
+    "black",
     "black",
     "black",
     "orange",
@@ -129,14 +149,15 @@ let moves = [],
   arrays = [],
   depth = 0;
 const testing = false;
-
 if (testing) cube = test_cube;
 arrays.push(cube.map((arr) => arr.slice()));
 // console.log(arrays);
 // ToDO visualize scramble in 2d
 const rotate = (direction, lane) => {
   const prev = cube.map((arr) => arr.slice());
+  moves.push(direction);
   // console.log(direction, lane, cube, prev);
+  // console.log(direction);
   switch (direction) {
     case "U":
       lane = 1;
@@ -195,11 +216,12 @@ const rotate = (direction, lane) => {
     if (lane > 1) num_to_reverse = 14;
     if (direction == "D'" || direction == "U'") {
       cube[1][j] = prev[5][num_to_reverse - j];
-      cube[3][j] = prev[4][num_to_reverse - j];
+      cube[3][j] = prev[4][j];
       cube[4][j] = prev[1][j];
-      cube[5][j] = prev[3][j];
+      cube[5][j] = prev[3][num_to_reverse - j];
+      // wrong reeeeeeeeeeeeeeee
     } else if (direction === "D" || direction === "U") {
-      console.log("D", num_to_reverse - j);
+      // console.log("D", num_to_reverse - j);
       cube[1][j] = prev[4][j];
       cube[3][j] = prev[5][num_to_reverse - j];
       cube[4][j] = prev[3][j];
@@ -211,7 +233,7 @@ const rotate = (direction, lane) => {
       left_added = 6;
     if (direction === "B'" || direction === "B") (left_added = -6), (added = 2);
     if (direction == "F" || direction === "B'") {
-      console.log(j + left_added, (j % 3) * 3 + added);
+      // console.log(j + left_added, (j % 3) * 3 + added);
       cube[0][j + left_added] = prev[5][6 - (j % 3) * 3 + added];
       cube[2][j + left_added] = prev[4][6 - (j % 3) * 3 + added];
       cube[4][(j % 3) * 3 + added] = prev[0][j + left_added];
@@ -230,7 +252,7 @@ const rotate = (direction, lane) => {
       k = j + 2;
     // 0 3 6 > 2 5 8
     if (lane > 1) (num_to_reverse = 10), (k_added = 6), (k = j - 2);
-    console.log(j, k_added, k_added - k);
+    // console.log(j, k_added, k_added - k);
     if (direction === "L" || direction === "R") {
       cube[0][j] = prev[1][j];
       cube[1][j] = prev[2][num_to_reverse - j];
@@ -255,7 +277,7 @@ function scramble(num) {
   // moves = 2;
   let i = 0;
   while (i < num) {
-    let direction_idx = Math.floor(Math.random() * (12 - 0 + 1) + 0);
+    let direction_idx = Math.floor(Math.random() * (11 - 0 + 1) + 0);
     let directions = [
       "U",
       "U'",
@@ -290,10 +312,10 @@ const blackCross = () => {
       filtered.push("white");
     }
   }
-  console.log(filtered);
+  // console.log(filtered);
 
   // console.log(cube);
-  console.log(moves);
+  // console.log(moves);
 };
 
 const checkCross = () => {
@@ -323,7 +345,10 @@ const checkCross = () => {
   return cross.join() === filtered.join() || solved_cross === true;
 };
 const moveList = (mList, face) => {
-  mList = mList.split(" ");
+  // console.log(Array.isArray(mList));
+  if (!Array.isArray(mList)) {
+    mList = mList.split(" ");
+  }
   for (let move of mList) {
     move = move_translator(face, move);
     rotate(move);
@@ -350,7 +375,6 @@ for (let i = 0; i < 6; i++) {
 // moveList("F U D R L'");
 // console.log(arrays);
 const move_translator = (location, moves) => {
-  // console.log(location, moves);
   switch (location) {
     case "green":
       if (moves.includes("F")) {
@@ -374,6 +398,9 @@ const move_translator = (location, moves) => {
       } else if (moves.includes("B")) {
         //    these have the highest chance of being wrong
         moves = moves.split("'").length > 1 ? "R" : "R'";
+      } else if (moves.includes("U")) {
+        //    these have the highest chance of being wrong
+        // moves = moves.split("'").length > 1 ? "U" : "U'";
       }
       break;
     case "orange":
@@ -385,16 +412,13 @@ const move_translator = (location, moves) => {
         moves = moves.split("'").length > 1 ? "L" : "L'";
       } else if (moves.includes("B")) {
         moves = moves.split("'").length > 1 ? "F" : "F'";
-      } else if (moves.includes("U")) {
-        moves = moves.split("'").length > 1 ? "U" : "U'";
-      } else if (moves.includes("D")) {
-        moves = moves.split("'").length > 1 ? "D" : "D'";
       }
       break;
     default:
       return moves;
   }
-  console.log(moves);
+  console.log(location, moves);
   return moves;
 };
 // moveList("F R D U F");
+// moveList("F U F'",'blue')

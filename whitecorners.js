@@ -14,71 +14,115 @@ const rotate_corner_from_top_layer = () => {
 };
 
 const rotate_corner_from_face = () => {
-  const face_lookup = { 0: 5, 2: 3, 6: 1, 8: 4 };
+  const front_lookup = { 0: 5, 2: 3, 6: 1, 8: 1 };
+  const right_lookup = { 0: 3, 2: 4, 6: 5, 8: 4 };
   const top_layer_face_lookup = { 0: "blue", 2: "orange", 6: null, 8: "green" };
   const face_conversion = { 5: "blue", 3: "orange", 1: "red", 4: "green" };
   for (let i = 0; i < 9; i += 2) {
-    if (cube[0][0] === `white_${0}`) {
+    if (cube[0][i] === `white_${i}`) {
       return moveList("F R U U R' F'", top_layer_face_lookup[i]);
-    } else if (cube[0].includes(`white_${0}`) && cube[0][0] !== `white_${0}`) {
+    } else if (cube[0].includes(`white_${i}`) && cube[0][i] !== `white_${i}`) {
       console.log("pending", i);
       return moveList("U");
     }
 
     let idx_to_check = 0;
-    if (cube[face_lookup[i] === 5]) {
+    if (i === 0) {
       idx_to_check = 2;
     }
-    if (check_cube_by_layer("white", 1)) {
+    let top_layer = check_cube_by_layer("white", 1);
+
+    if (top_layer) {
       console.log(
-        "location of target piece: ",
-        check_cube_by_layer("white", 1)
+        "location of target piece:",
+        face_conversion[top_layer],
+        "idx:",
+        cube[top_layer],
+        cube[top_layer].indexOf(`white_${i}`),
+        "piece to check: ",
+        i
       );
-      if (i != 4 && cube[5][2] === `white_${0}`) {
-        console.log("front", face_conversion[face_lookup[0]]);
-        return moveList("F U F'", face_conversion[face_lookup[0]]);
-      } else if (
-        i != 4 &&
-        cube[face_lookup[i]] !== 5 &&
-        cube[3][2] === `white_0`
-      ) {
-        console.log("right");
+      console.log(
+        face_conversion[front_lookup[i]],
+        cube[front_lookup[i]][idx_to_check]
+      );
+      // right of face ac
+      if (cube[1][0] === `white_6`) {
+        return moveList("F U F'");
+      } else if (cube[5][0] === "white_6") {
+        return moveList("F' U' F", "blue");
+      } else if (cube[1][2] === "white_8") {
+        return moveList("F' U' F");
+      } else if (cube[4][0] === "white_8") {
+        return moveList("F U F'", "green");
+      } else if (cube[4][2] === "white_2") {
+        return moveList("F' U' F", "green");
+      } else if (cube[3][0] === "white_2") {
+        return moveList("F U F'", "orange");
+      } else if (cube[3][2] === "white_0") {
         return moveList("F' U' F", "orange");
-      } else if (cube[5][2] !== `white_0` && cube[3][2] !== `white_0`) {
-        console.log("rotate piece in top layer");
-        moveList("U");
-        // noLoop();
-      }
-    } else if (check_cube_by_layer("white", 3)) {
-      let center = cube[check_cube_by_layer("white", 3)][4];
-      console.log(
-        "remove from bottom layer",
-        cube[check_cube_by_layer("white", 3)].indexOf("white_0")
-      );
-      let idx = cube[check_cube_by_layer("white", 3)].indexOf("white_0");
-      console.log(idx % 3);
-      if (idx % 3 === 0 && !center.includes("blue")) {
-        return moveList("F U F'", center);
-      } else if (idx % 3 !== 0 && !center.includes("blue")) {
-        return moveList("F' U' F", center);
-      } else if (idx % 3 !== 0 && center.includes("blue")) {
-        return moveList("F U F'", center);
+      } else if (cube[5][2] === "white_0") {
+        return moveList("F U F'", "blue");
       } else {
-        return moveList("F' U' F", center);
+        console.log("rotate piece to correct position");
+        return moveList("U");
+      }
+      // if (cube[front_lookup[i]][2] === `white_${i}`) {
+      //   console.log("front", face_conversion[front_lookup[i]], 2);
+      //   return moveList("F U F'", face_conversion[front_lookup[i]]);
+      // } else if (cube[right_lookup[i]][0] === `white_${i}`) {
+      //   console.log("right");
+      //   if (face_conversion[right_lookup[i]] === "green") {
+      //     return moveList("F U' F'", "green");
+      //   } else {
+      //     return moveList("F' U' F", face_conversion[right_lookup[i]]);
+      //   }
+      // } else if (
+      //   (i !== 4 && cube[front_lookup[i]][idx_to_check] !== `white_${i}`) ||
+      //   cube[right_lookup[i]][idx_to_check] !== `white_${i}`
+      // ) {
+      //   console.log("rotate piece in top layer");
+      //   moveList("U");
+      //   // noLoop();
+      // }
+    } else if (
+      check_cube_by_layer("white", 3)
+      // check_cube_by_layer("white", 3) !== -1
+    ) {
+      let bottom_layer = check_cube_by_layer("white", 3);
+      let center = cube[bottom_layer][4].split("_")[0];
+      let idx = cube[bottom_layer].indexOf(`white_${i}`);
+      console.log(idx % 3);
+      if (idx >= 6) {
+        console.log(
+          "remove from bottom layer",
+          face_conversion[bottom_layer],
+          cube[bottom_layer].indexOf(`white_${i}`)
+        );
+        if (idx % 3 === 0 && !center.includes("blue")) {
+          console.log("cw", center);
+          return moveList("F U F'", center);
+        } else if (idx % 3 !== 0 && !center.includes("blue")) {
+          return moveList("F' U' F", center);
+        } else if (idx % 3 !== 0 && center.includes("blue")) {
+          return moveList("F U F'", center);
+        } else if (idx % 3 === 0 && center.includes("blue")) {
+          console.log("rip", idx, center);
+          // noLoop();
+          return moveList("F' U' F", center);
+        }
       }
     }
-    if (i == 0) {
-      remove_corner_from_bottom_layer();
-    }
-    // if (check_cube_by_layer("white", 1)) {
+    remove_corner_from_bottom_layer();
+    // if (top_layer) {
     //   console.log(cube[face_lookup[i]]);
-    //   if (i != 4 && cube[face_lookup[i]][idx_to_check] === `white_${i}`) {
+    //   if ( cube[face_lookup[i]][idx_to_check] === `white_${i}`) {
     //     console.log("front");
     //     return moveList("F U F'", face_conversion[face_lookup[i]]);
     //   } else if (
-    //     i != 4 &&
+    //
     //     cube[face_lookup[i]] !== 5 &&
-    //     cube[face_lookup[i]][2] === `white_${i}`
+    //     cube[face_lookup[i]][idx_to_check] === `white_${i}`
     //   ) {
     //     console.log("right");
     //     return moveList("L U' L'", face_conversion[face_lookup[i]]);
@@ -107,9 +151,10 @@ const check_cube_by_layer = (color, layer) => {
       if (
         !cube[i][4].includes("white") &&
         !cube[i][4].includes("yellow") &&
-        cube[i][j].includes(color + "_0")
+        cube[i][j].includes(color)
       ) {
         // return center of cube
+        console.log("check cube by layer: ", i, j, cube[i]);
         return i;
       }
     }
@@ -123,23 +168,24 @@ const solve_corners = () => {
 };
 const remove_corner_from_bottom_layer = () => {
   for (let i = 0; i < 9; i++) {
-    if (i == 0) {
-      if (cube[2][i] !== `white_${i}` && cube[2][i].includes("white")) {
-        console.log(i);
-        if (i === 0 || i === 6) {
-          if (i < 4) {
-            return moveList("L U L'");
-          } else {
-            return moveList("L' U L");
-          }
+    if (cube[2][i] !== `white_${i}` && cube[2][i].includes("white")) {
+      console.log("bottom layer", i);
+      if (i === 0 || i === 6) {
+        if (i === 6) {
+          console.log("remove corner 6");
+          return moveList("L U L'");
         } else {
-          if (i < 4) {
-            return moveList("R U R'");
-          } else {
-            return moveList("R' U R");
-          }
+          return moveList("L' U L");
+        }
+      } else {
+        if (i === 8) {
+          return moveList("R U R'");
+        } else {
+          console.log("r bottom");
+          return moveList("R' U' R");
         }
       }
     }
   }
 };
+// remove_corner_from_bottom_layer();
