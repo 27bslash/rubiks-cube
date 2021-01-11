@@ -1,11 +1,8 @@
-let daisy = false;
-
-const white_cross = (colour) => {
-  const edge_locations = [1, 3, 5, 7];
+const white_cross = () => {
   if (!daisy) {
     for (let face of cube) {
       for (let i = 1; i < 8; i += 2) {
-        if (face[i].includes(colour) && !face[4].includes("yellow")) {
+        if (face[i].includes("white") && !face[4].includes("yellow")) {
           return rotate_top_layer(face[4].split("_")[0], i);
         }
       }

@@ -1,6 +1,12 @@
+let daisy;
 let solved_cross;
+let solved_white_corners;
+let solved_f2l;
+let solved_yellow_edges;
+let solved_yellow_corners;
+let solved_cube = true;
 function setup() {
-  frameRate(6000);
+  frameRate(60);
   createCanvas(window.innerWidth, window.innerHeight);
   background(200);
   // drawCube();
@@ -14,20 +20,65 @@ function setup() {
     }
   }
 }
+const scramble_button = () => {
+  for (let i = 0; i < 20; i++) {
+    if (!testing) {
+      scramble(1);
+    }
+  }
+};
+const cross_button = () => {
+  while (!solved_cross) {
+    white_cross();
+  }
+};
+const white_corners_button = () => {
+  while (!solved_white_corners) {
+    solve_corners();
+  }
+};
+const f2l_button = () => {
+  while (!solved_f2l) {
+    solve_colored_edges();
+  }
+};
+const oll_button = () => {
+  while (!solved_yellow_edges) {
+    solve_yellow_edges();
+  }
+  while (!solved_yellow_corners) {
+    solve_yellow_corners();
+  }
+};
+const pll_button = () => {
+  while (arrays[0][0].join("") !== cube[0].join("")) {
+    solve_final_face();
+  }
+};
+const solve_cube = () => {
+  solved_cube = false;
+};
 // console.log(moves);
 let d = 0;
 function draw() {
   drawCube();
   // console.log(solved_cross)
-  if (!testing) {
+  if (!solved_cube) {
     if (!solved_cross) {
       // noLoop();
-      white_cross("white");
+      white_cross();
       // line_edges_up()
-    }
-    if (solved_cross) {
+    } else if (!solved_white_corners) {
       // console.log(cube);
       solve_corners();
+    } else if (!solved_f2l) {
+      solve_colored_edges();
+    } else if (!solved_yellow_edges) {
+      solve_yellow_edges();
+    } else if (!solved_yellow_corners) {
+      solve_yellow_corners();
+    } else {
+      solve_final_face();
     }
   }
   // moveList("F R U' R' U' R U R' F' R U R' U' R' F R F'");
@@ -44,7 +95,7 @@ function draw() {
   } else {
     d++;
   }
-  if (arrays.length > 10000) noLoop();
+  if (arrays.length > 100000) noLoop();
 }
 
 const pink_check = () => {
@@ -75,100 +126,19 @@ const drawCube = () => {
       } else if (j < 9) {
         y = 200;
       }
-      // if (arrays[d][i][j] == "white_0") {
-      //   fill("pink");
-      //   rect((j % 3) * sqWidth + i * 305, y, sqWidth);
-      // } else if (arrays[d][i][j] == "white_2") {
-      //   fill("cyan");
-      //   rect((j % 3) * sqWidth + i * 305, y, sqWidth);
-      //   //   rect((j % 3) * sqWidth + i * 305, y, sqWidth);
-      //   // } else if (arrays[d][i][j] == "white_2") {
-      //   //   fill("lime");
-      //   //   rect((j % 3) * sqWidth + i * 305, y, sqWidth);
-      // } else if (arrays[d][i][j] == "white_8") {
-      //   fill("purple");
-      //   rect((j % 3) * sqWidth + i * 305, y, sqWidth);
-      // } else if (arrays[d][i][j] == "white_6") {
-      //   fill("lime");
-      //   rect((j % 3) * sqWidth + i * 305, y, sqWidth);
-      // } else {
 
-      fill(arrays[d][i][j].split("_")[0]);
-      rect((j % 3) * sqWidth + i * 305, y, sqWidth);
+      // change to arrays[d][i][j]
+      if (arrays.length > 0) {
+        fill(arrays[d][i][j].split("_")[0]);
+        rect((j % 3) * sqWidth + i * 305, y, sqWidth);
+      } else {
+        fill(arrays[d][i][j].split("_")[0]);
+        rect((j % 3) * sqWidth + i * 305, y, sqWidth);
+      }
     }
   }
 };
-// F L D2 L' F'
-// moveList("B' L' U U L B")
-// bottom left
-// moveList("F R U U R' F'");
-// moveList("B L' U U L B'")
-// bottom left
-// F R U U R' F'  =>  R B U U B' R'
-//green
-// moveList("R B U U B' R'");
-// top left
-// F R U U R' F'  =>  L' F U U F' L
-// top right
-// B L' U U L B'
-// moveList("F R U U R' F'");
-// moveList("R U R'",'blue')
-// moveList(
-//   "U' R D B' R F' L' D' B R' B' U' U' D L' R' B B' B B R R B U R' U U R F F U B B R R U L' L' U B' B'"
-// );
-// moveList("L' U' L")
-// moveList("F' U' F", 'blue');
-// moveList(
-//   "F",
-//   "L",
-//   "U",
-//   "F",
-//   "L'",
-//   "L'",
-//   "D'",
-//   "D",
-//   "R",
-//   "F",
-//   "B",
-//   "U'",
-//   "U",
-//   "F'",
-//   "L'",
-//   "F'",
-//   "L'",
-//   "B'",
-//   "U",
-//   "L'",
-//   "D'",
-//   "L",
-//   "L",
-//   "U",
-//   "L",
-//   "D'",
-//   "F",
-//   "U",
-//   "L",
-//   "U",
-//   "U",
-//   "U",
-//   "R",
-//   "R",
-//   "B",
-//   "B",
-//   "L'",
-//   "L'",
-//   "U",
-//   "F",
-//   "F",
-//   "U",
-//   "U",
-//   "R",
-//   "R",
-//   "U",
-//   "B'",
-//   "U'",
-//   "B",
-//   "L",
-//   "U'",
-//   "L'"
-// );
+//left
+// moveList("U' L U L' U F U' F'", "blue");
+//right
+// moveList(left_algorithm);

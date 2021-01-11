@@ -114,6 +114,9 @@ const rotate_corner_from_face = () => {
       }
     }
     remove_corner_from_bottom_layer();
+    if (check_corners()) {
+      solved_white_corners = true;
+    }
     // if (top_layer) {
     //   console.log(cube[face_lookup[i]]);
     //   if ( cube[face_lookup[i]][idx_to_check] === `white_${i}`) {
@@ -154,17 +157,15 @@ const check_cube_by_layer = (color, layer) => {
         cube[i][j].includes(color)
       ) {
         // return center of cube
-        console.log("check cube by layer: ", i, j, cube[i]);
+        // console.log("check cube by layer: ", i, j, cube[i]);
         return i;
       }
     }
   }
 };
 const solve_corners = () => {
-  if ("solved_cross") {
-    // rotate_corner_from_top_layer();
-    rotate_corner_from_face();
-  }
+  // rotate_corner_from_top_layer();
+  rotate_corner_from_face();
 };
 const remove_corner_from_bottom_layer = () => {
   for (let i = 0; i < 9; i++) {
@@ -189,3 +190,12 @@ const remove_corner_from_bottom_layer = () => {
   }
 };
 // remove_corner_from_bottom_layer();
+const check_corners = () => {
+  arr = [];
+  for (let i = 0; i < 9; i++) {
+    if (cube[2][i] === `white_${i}`) {
+      arr.push(`white_${i}`);
+    }
+  }
+  return arr.join("") == arrays[0][2].join("");
+};

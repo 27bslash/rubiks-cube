@@ -155,7 +155,10 @@ arrays.push(cube.map((arr) => arr.slice()));
 // ToDO visualize scramble in 2d
 const rotate = (direction, lane) => {
   const prev = cube.map((arr) => arr.slice());
+  // console.log(direction, /[EMS]/g.test(direction));
   moves.push(direction);
+  let middle_layer_test = /[EMS]/g.test(direction);
+  if (middle_layer_test) lane = 2;
   // console.log(direction, lane, cube, prev);
   // console.log(direction);
   switch (direction) {
@@ -210,18 +213,17 @@ const rotate = (direction, lane) => {
     default:
       break;
   }
-
   for (let j = lane * 3 - 3; j < lane * 3; j++) {
-    let num_to_reverse = 2;
-    if (lane > 1) num_to_reverse = 14;
-    if (direction == "D'" || direction == "U'") {
+    let num_to_reverse = (lane * 3 - 3 + 1) * 2;
+    if (direction == "D'" || direction == "U'" || direction === "E'") {
       cube[1][j] = prev[5][num_to_reverse - j];
       cube[3][j] = prev[4][j];
       cube[4][j] = prev[1][j];
       cube[5][j] = prev[3][num_to_reverse - j];
       // wrong reeeeeeeeeeeeeeee
-    } else if (direction === "D" || direction === "U") {
+    } else if (direction === "D" || direction === "U" || direction === "E") {
       // console.log("D", num_to_reverse - j);
+      // console.log(num_to_reverse, j);
       cube[1][j] = prev[4][j];
       cube[3][j] = prev[5][num_to_reverse - j];
       cube[4][j] = prev[3][j];
@@ -229,16 +231,17 @@ const rotate = (direction, lane) => {
     }
   }
   for (let j = lane * 3 - 3; j < lane * 3; j++) {
-    let added = 0,
+    let added = lane - 1,
       left_added = 6;
-    if (direction === "B'" || direction === "B") (left_added = -6), (added = 2);
-    if (direction == "F" || direction === "B'") {
-      // console.log(j + left_added, (j % 3) * 3 + added);
+    if (lane == 3) left_added = -6;
+    if (lane == 2) left_added = 0;
+    if (direction == "F" || direction === "B'" || direction === "S") {
+      // console.log(j, j + left_added, (j % 3) * 3 + added);
       cube[0][j + left_added] = prev[5][6 - (j % 3) * 3 + added];
       cube[2][j + left_added] = prev[4][6 - (j % 3) * 3 + added];
       cube[4][(j % 3) * 3 + added] = prev[0][j + left_added];
       cube[5][(j % 3) * 3 + added] = prev[2][j + left_added];
-    } else if (direction == "F'" || direction === "B") {
+    } else if (direction == "F'" || direction === "B" || direction === "S'") {
       // console.log(j, left_added, added);
       cube[2][j + left_added] = prev[5][(j % 3) * 3 + added];
       cube[0][j + left_added] = prev[4][(j % 3) * 3 + added];
@@ -247,18 +250,24 @@ const rotate = (direction, lane) => {
     }
   }
   for (let j = lane - 1; j < cube[0].length; j += 3) {
-    let num_to_reverse = 6,
+    let num_to_reverse = (lane - 1 + 3) * 2,
       k_added = 10,
       k = j + 2;
-    // 0 3 6 > 2 5 8
-    if (lane > 1) (num_to_reverse = 10), (k_added = 6), (k = j - 2);
+    // 1 > 10;
+    // 2 > 8;
+    // 3 > 6;
+    // 1 > j + 2;
+    // 1 > j;
+    // 1 > j - 2;
+    if (lane === 3) (k_added = 6), (k = j - 2);
+    if (lane === 2) (k_added = 8), (k = j);
     // console.log(j, k_added, k_added - k);
-    if (direction === "L" || direction === "R") {
+    if (direction === "L" || direction === "R" || direction === "M") {
       cube[0][j] = prev[1][j];
       cube[1][j] = prev[2][num_to_reverse - j];
       cube[2][num_to_reverse - j] = prev[3][k_added - k];
       cube[3][k_added - k] = prev[0][j];
-    } else if (direction === "L'" || direction === "R'") {
+    } else if (direction === "L'" || direction === "R'" || direction === "M'") {
       cube[0][j] = prev[3][k_added - k];
       cube[1][j] = prev[0][j];
       cube[2][j] = prev[1][num_to_reverse - j];
@@ -275,9 +284,16 @@ function scramble(num) {
   // let moves = Math.floor(Math.random() * (100 - 0 + 1) + 1);
   // console.log("moves: ", moves);
   // moves = 2;
+  solved_cross = false;
+  solved_white_corners = false;
+  solved_f2l = false;
+  solved_yellow_edges = false;
+  solved_yellow_corners = false;
+  daisy = false;
   let i = 0;
   while (i < num) {
     let direction_idx = Math.floor(Math.random() * (11 - 0 + 1) + 0);
+    // console.log(direction_idx);
     let directions = [
       "U",
       "U'",
@@ -299,6 +315,7 @@ function scramble(num) {
     // moves.push(directions[direction_idx]);
     i++;
   }
+  moves = [];
 }
 
 const blackCross = () => {
@@ -382,7 +399,7 @@ const move_translator = (location, moves) => {
       } else if (moves.includes("R")) {
         moves = moves.split("'").length > 1 ? "B'" : "B";
       } else if (moves.includes("L")) {
-        moves = moves.split("'").length > 1 ? "F'" : "F";
+        moves = moves.split("'").length > 1 ? "F" : "F'";
       } else if (moves.includes("B")) {
         //    these have the highest chance of being wrong
         moves = moves.split("'").length > 1 ? "L" : "L'";
@@ -417,7 +434,7 @@ const move_translator = (location, moves) => {
     default:
       return moves;
   }
-  console.log(location, moves);
+  // console.log(location, moves);
   return moves;
 };
 // moveList("F R D U F");

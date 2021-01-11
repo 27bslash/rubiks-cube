@@ -12,9 +12,13 @@
     <script src="cube.js"></script>
     <script src="whitecross.js"></script>
     <script src="whitecorners.js"></script>
+    <script src="colored_edges.js"></script>
+    <script src="oll.js"></script>
+    <script src="pll.js"></script>
+    <script src="cube_show.js"></script>
     <script src="sketch.js"></script>
 
-    <button onclick="scramble(20)">scramble</button>
+    <button onclick="scramble_button()">scramble</button>
     <button onclick="rotate('F')">front</button>
     <button onclick="rotate(`F'`)">front A</button>
     <button onclick="rotate('U')">Up</button>
@@ -27,11 +31,16 @@
     <button onclick="rotate(`R'`)">Right Ac</button>
     <button onclick="rotate('B')">back</button>
     <button onclick="rotate(`B'`)">back C</button>
-    <button onclick="white_cross(`white`)">edges C</button>
-    <button onclick="rotate_corner_from_top_layer()">corners</button>
-    <button onclick="solve_corners()">face</button>
-    <button onclick="  console.log(moves);
-">log</button>
+    <button onclick="rotate(`E`)">Middle E</button>
+    <button onclick="rotate(`M`)">Middle M</button>
+    <button onclick="rotate(`S`)">Middle S</button>
+    <button onclick="cross_button()">edges C</button>
+    <button onclick="white_corners_button()">face</button>
+    <button onclick="solve_colored_edges()">colored_edges</button>
+    <button onclick="oll_button()">OLL</button>
+    <button onclick="pll_button()">PLL</button>
+    <button onclick="solve_cube()">Solve Cube</button>
+    <button onclick="console.log(moves)">log</button>
   </head>
   <body></body>
 </html>
