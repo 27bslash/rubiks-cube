@@ -5,20 +5,28 @@ let solved_f2l;
 let solved_yellow_edges;
 let solved_yellow_corners;
 let solved_cube = true;
+let first_rotation = false;
 function setup() {
   frameRate(60);
-  createCanvas(window.innerWidth, window.innerHeight);
-  background(200);
+  createCanvas(window.innerWidth - 8, window.innerHeight - 58, WEBGL);
   // drawCube();
   // button = createButton("scramble");
   // button.mousePressed(scramble(40));
   // button.position(400, 400);
+  cam = createEasyCam({ distance: 400 });
+  // suppress right-click context menu
+  document.oncontextmenu = function () {
+    return false;
+  };
   solved_cross = false;
   for (let i = 0; i < 20; i++) {
     if (!testing) {
-      scramble(1);
+      // scramble(1);
     }
   }
+  // rotateX(90);
+  // rotateY(90);
+  angleMode(DEGREES);
 }
 const scramble_button = () => {
   for (let i = 0; i < 20; i++) {
@@ -61,6 +69,12 @@ const solve_cube = () => {
 // console.log(moves);
 let d = 0;
 function draw() {
+  background(200);
+  // rotateY(frameCount * 0.01);
+  // rotateX(frameCount * 0.01);
+
+  rotateX(-30);
+  rotateY(-45);
   drawCube();
   // console.log(solved_cross)
   if (!solved_cube) {
@@ -108,14 +122,14 @@ const pink_check = () => {
   // );
   return cub[2][0] === "white_0" && !cub[5][8].includes("blue");
 };
-const drawCube = () => {
+const drafwCube = () => {
   let sqWidth = 100;
   for (let i = 0; i < cube.length; i++) {
     rectMode(CORNER);
     let sideText = ["Top", "Face", "Bottom", "Back", "Right", "Left"];
-    fill("black");
-    textSize(30);
-    text(sideText[i], 113 + i * 305, 350);
+    // fill("black");
+    // textSize(30);
+    // text(sideText[i], 113 + i * 305, 350);
     for (let j = 0; j < cube[i].length; j++) {
       rectMode(CORNER);
       let y;
@@ -126,15 +140,50 @@ const drawCube = () => {
       } else if (j < 9) {
         y = 200;
       }
+      // if (arrays[d][i][j] == "white_0") {'
+      //   fill("pink");
+      //   rect((j % 3) * sqWidth + i * 305, y, sqWidth);
+      // } else if (arrays[d][i][j] == "white_2") {
+      //   fill("cyan");
+      //   rect((j % 3) * sqWidth + i * 305, y, sqWidth);
+      //   //   rect((j % 3) * sqWidth + i * 305, y, sqWidth);
+      //   // } else if (arrays[d][i][j] == "white_2") {
+      //   //   fill("lime");
+      //   //   rect((j % 3) * sqWidth + i * 305, y, sqWidth);
+      // } else if (arrays[d][i][j] == "white_8") {
+      //   fill("purple");
+      //   rect((j % 3) * sqWidth + i * 305, y, sqWidth);
+      // } else if (arrays[d][i][j] == "white_6") {
+      //   fill("lime");
+      //   rect((j % 3) * sqWidth + i * 305, y, sqWidth);
+      // } else {
 
+      let len = 30;
+      let offset = (3 - 1) * len * 0.5;
+      let x = len * i - offset;
+      // let y = len * j - offset;
+      // fill(arrays[d][i][j].split("_")[0]);
+      strokeWeight(2);
+      // rect(i/2, y, sqWidth);
+      console.log(x, y, j % 3);
+      arrays[d][i][j] = new Cubie((j % 3) * len, y / 3 - len, 5, len);
+      arrays[d][i][j].show();
       // change to arrays[d][i][j]
-      if (arrays.length > 0) {
-        fill(arrays[d][i][j].split("_")[0]);
-        rect((j % 3) * sqWidth + i * 305, y, sqWidth);
-      } else {
-        fill(arrays[d][i][j].split("_")[0]);
-        rect((j % 3) * sqWidth + i * 305, y, sqWidth);
-      }
+      // for (let i = 0; i < 3; i++) {
+      //   for (let j = 0; j < 3; j++) {
+      //     for (let k = 0; k < 3; j++) {
+      //       let len = 30;
+      //       let offset = (3 - 1) * len * 0.5;
+      //       let x = len * i - offset;
+      //       let y = len * j - offset;
+      //       let z = len * k - offset;
+      //       let cubdd;
+      //       cubdd[i][j][k] = new Cubie(x, y, z, len);
+      //       cubdd[i][j][k].show();
+      //       console.log(cubdd);
+      //     }
+      //   }
+      // }
     }
   }
 };
@@ -142,3 +191,104 @@ const drawCube = () => {
 // moveList("U' L U L' U F U' F'", "blue");
 //right
 // moveList(left_algorithm);
+function drawCube() {
+  let r = 30;
+  let offset = r * 2;
+  for (let i = 0; i < 6; i++) {
+    rectMode(CORNER);
+    for (let j = 0; j < 9; j++) {
+      rectMode(CORNER);
+      let y;
+      if (j < 3) {
+        y = 0;
+      } else if (j < 6) {
+        y = r * 2;
+      } else if (j < 9) {
+        y = r * 4;
+      }
+      push();
+      // translate(0, 0, 0);
+      fill("cyan");
+      ellipse(0, 0, 3);
+      pop();
+      if (i == 0) {
+        push();
+        translate((j % 3) * r * 2 - offset, -offset, -y + offset);
+        beginShape();
+        fill(arrays[d][i][j].split("_")[0]);
+        strokeWeight(2);
+        vertex(-r, -r, -r);
+        vertex(-r, -r, r);
+        vertex(r, -r, r);
+        vertex(r, -r, -r);
+        endShape();
+        pop();
+      }
+      if (i == 1) {
+        push();
+        translate((j % 3) * r * 2 - offset, y - offset, +offset);
+        beginShape();
+        fill(arrays[d][i][j].split("_")[0]);
+        strokeWeight(2);
+        vertex(-r, -r, r);
+        vertex(-r, r, r);
+        vertex(r, r, r);
+        vertex(r, -r, r);
+        endShape();
+        pop();
+      }
+      if (i == 2) {
+        push();
+        translate((j % 3) * r * 2 - offset, r * 4 - offset, -y + offset);
+        beginShape();
+        fill(arrays[d][i][8 - j].split("_")[0]);
+        strokeWeight(2);
+        vertex(-r, r, -r);
+        vertex(-r, r, r);
+        vertex(r, r, r);
+        vertex(r, r, -r);
+        endShape();
+        pop();
+      }
+      if (i == 3) {
+        push();
+        translate((j % 3) * r * 2 - offset, y - offset, -r * 4 + offset);
+        beginShape();
+        fill(arrays[d][i][8-j].split("_")[0]);
+        strokeWeight(2);
+        vertex(-r, -r, -r);
+        vertex(-r, r, -r);
+        vertex(r, r, -r);
+        vertex(r, -r, -r);
+        endShape();
+        pop();
+      }
+      if (i == 4) {
+        push();
+        translate(r * 4 - offset, y - offset, -(j % 3) * r * 2 + offset);
+        beginShape();
+        fill(arrays[d][i][j].split("_")[0]);
+        strokeWeight(2);
+        vertex(r, -r, -r);
+        vertex(r, -r, r);
+        vertex(r, r, r);
+        vertex(r, r, -r);
+        endShape();
+        pop();
+      }
+      if (i == 5) {
+        push();
+        translate(0 - offset, y - offset, -(j % 3) * r * 2 + offset);
+        beginShape();
+        fill(arrays[d][i][j].split("_")[0]);
+        strokeWeight(2);
+        vertex(-r, -r, -r);
+        vertex(-r, -r, r);
+        vertex(-r, r, r);
+        vertex(-r, r, -r);
+        endShape();
+        pop();
+      }
+    }
+  }
+}
