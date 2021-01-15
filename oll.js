@@ -35,7 +35,7 @@ const solve_yellow_edges = () => {
     moveList("F R U R' U' F'");
   } else {
     // L
-    if (!compare_arrays(yellow_edges, [5, 7])) {
+    if (!compare_arrays(yellow_edges, [1, 5])) {
       moveList("U");
     } else {
       console.log("L");

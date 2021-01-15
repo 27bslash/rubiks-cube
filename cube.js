@@ -164,19 +164,19 @@ const rotate = (direction, lane) => {
   switch (direction) {
     case "U":
       lane = 1;
-      cube[0] = rotate_face([...cube[0]], "cw");
+      cube[0] = rotate_face([...cube[0]], "ac");
       break;
     case "U'":
       lane = 1;
-      cube[0] = rotate_face([...cube[0]], "ac");
+      cube[0] = rotate_face([...cube[0]], "cw");
       break;
     case "D":
       lane = 3;
-      cube[2] = rotate_face([...cube[2]], "cw");
+      cube[2] = rotate_face([...cube[2]], "ac");
       break;
     case "D'":
       lane = 3;
-      cube[2] = rotate_face([...cube[2]], "ac");
+      cube[2] = rotate_face([...cube[2]], "cw");
       break;
     case "L":
       lane = 1;
@@ -202,11 +202,11 @@ const rotate = (direction, lane) => {
       lane = 1;
       cube[1] = rotate_face([...cube[1]], "ac");
       break;
-    case "B":
+    case "B'":
       lane = 3;
       cube[3] = rotate_face([...cube[3]], "cw");
       break;
-    case "B'":
+    case "B":
       lane = 3;
       cube[3] = rotate_face([...cube[3]], "ac");
       break;
@@ -217,16 +217,16 @@ const rotate = (direction, lane) => {
     let num_to_reverse = (lane * 3 - 3 + 1) * 2;
     if (direction == "D'" || direction == "U'" || direction === "E'") {
       cube[1][j] = prev[5][num_to_reverse - j];
-      cube[3][j] = prev[4][j];
+      cube[3][j] = prev[4][num_to_reverse - j];
       cube[4][j] = prev[1][j];
-      cube[5][j] = prev[3][num_to_reverse - j];
+      cube[5][j] = prev[3][j];
       // wrong reeeeeeeeeeeeeeee
     } else if (direction === "D" || direction === "U" || direction === "E") {
       // console.log("D", num_to_reverse - j);
       // console.log(num_to_reverse, j);
       cube[1][j] = prev[4][j];
-      cube[3][j] = prev[5][num_to_reverse - j];
-      cube[4][j] = prev[3][j];
+      cube[3][j] = prev[5][j];
+      cube[4][j] = prev[3][num_to_reverse - j];
       cube[5][j] = prev[1][num_to_reverse - j];
     }
   }
@@ -237,16 +237,16 @@ const rotate = (direction, lane) => {
     if (lane == 2) left_added = 0;
     if (direction == "F" || direction === "B'" || direction === "S") {
       // console.log(j, j + left_added, (j % 3) * 3 + added);
-      cube[0][j + left_added] = prev[5][6 - (j % 3) * 3 + added];
-      cube[2][j + left_added] = prev[4][6 - (j % 3) * 3 + added];
-      cube[4][(j % 3) * 3 + added] = prev[0][j + left_added];
-      cube[5][(j % 3) * 3 + added] = prev[2][j + left_added];
+      cube[0][j] = prev[5][6 - (j % 3) * 3 + added];
+      cube[2][j] = prev[4][6 - (j % 3) * 3 + added];
+      cube[4][(j % 3) * 3 + added] = prev[0][j];
+      cube[5][(j % 3) * 3 + added] = prev[2][j];
     } else if (direction == "F'" || direction === "B" || direction === "S'") {
       // console.log(j, left_added, added);
-      cube[2][j + left_added] = prev[5][(j % 3) * 3 + added];
-      cube[0][j + left_added] = prev[4][(j % 3) * 3 + added];
-      cube[4][6 - (j % 3) * 3 + added] = prev[2][j + left_added];
-      cube[5][6 - (j % 3) * 3 + added] = prev[0][j + left_added];
+      cube[2][j] = prev[5][(j % 3) * 3 + added];
+      cube[0][j] = prev[4][(j % 3) * 3 + added];
+      cube[4][6 - (j % 3) * 3 + added] = prev[2][j];
+      cube[5][6 - (j % 3) * 3 + added] = prev[0][j];
     }
   }
   for (let j = lane - 1; j < cube[0].length; j += 3) {
@@ -263,15 +263,15 @@ const rotate = (direction, lane) => {
     if (lane === 2) (k_added = 8), (k = j);
     // console.log(j, k_added, k_added - k);
     if (direction === "L" || direction === "R" || direction === "M") {
-      cube[0][j] = prev[1][j];
-      cube[1][j] = prev[2][num_to_reverse - j];
-      cube[2][num_to_reverse - j] = prev[3][k_added - k];
-      cube[3][k_added - k] = prev[0][j];
+      cube[0][j] = prev[1][num_to_reverse - j];
+      cube[1][j] = prev[2][j];
+      cube[2][num_to_reverse - j] = prev[3][j];
+      cube[3][j] = prev[0][j];
     } else if (direction === "L'" || direction === "R'" || direction === "M'") {
-      cube[0][j] = prev[3][k_added - k];
-      cube[1][j] = prev[0][j];
-      cube[2][j] = prev[1][num_to_reverse - j];
-      cube[3][k_added - k] = prev[2][num_to_reverse - j];
+      cube[0][j] = prev[3][j];
+      cube[1][j] = prev[0][num_to_reverse - j];
+      cube[2][j] = prev[1][j];
+      cube[3][j] = prev[2][num_to_reverse - j];
     }
   }
   arrays.push(cube.map((arr) => arr.slice()));
@@ -289,6 +289,7 @@ function scramble(num) {
   solved_f2l = false;
   solved_yellow_edges = false;
   solved_yellow_corners = false;
+  solved_cube = true;
   daisy = false;
   let i = 0;
   while (i < num) {
@@ -309,6 +310,7 @@ function scramble(num) {
       "B'",
     ];
     rotate(directions[direction_idx]);
+    scramble_moves.push(directions[direction_idx]);
     if (pink_check()) {
       // console.log(directions[direction_idx]);
     }
@@ -437,5 +439,4 @@ const move_translator = (location, moves) => {
   // console.log(location, moves);
   return moves;
 };
-// moveList("F R D U F");
 // moveList("F U F'",'blue')

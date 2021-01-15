@@ -13,13 +13,19 @@ const rotate_corner_from_top_layer = () => {
   }
 };
 
-const rotate_corner_from_face = () => {
+const solve_white_corners = () => {
   const front_lookup = { 0: 5, 2: 3, 6: 1, 8: 1 };
   const right_lookup = { 0: 3, 2: 4, 6: 5, 8: 4 };
-  const top_layer_face_lookup = { 0: "blue", 2: "orange", 6: null, 8: "green" };
+  const top_layer_face_lookup = {
+    0: null,
+    2: "green",
+    6: "blue",
+    8: "orange",
+  };
   const face_conversion = { 5: "blue", 3: "orange", 1: "red", 4: "green" };
   for (let i = 0; i < 9; i += 2) {
     if (cube[0][i] === `white_${i}`) {
+      console.log(top_layer_face_lookup[i]);
       return moveList("F R U U R' F'", top_layer_face_lookup[i]);
     } else if (cube[0].includes(`white_${i}`) && cube[0][i] !== `white_${i}`) {
       console.log("pending", i);
@@ -37,31 +43,39 @@ const rotate_corner_from_face = () => {
         "location of target piece:",
         face_conversion[top_layer],
         "idx:",
-        cube[top_layer],
         cube[top_layer].indexOf(`white_${i}`),
+        cube[top_layer],
         "piece to check: ",
         i
       );
-      console.log(
-        face_conversion[front_lookup[i]],
-        cube[front_lookup[i]][idx_to_check]
-      );
+      console
+        .log
+        // face_conversion[front_lookup[i]],
+        // cube[front_lookup[i]][idx_to_check]
+        ();
       // right of face ac
-      if (cube[1][0] === `white_6`) {
+      // const top_layer_face_lookup = {
+      //   0: null,
+      //   2: "green",
+      //   6: "blue",
+      //   8: "orange",
+      // };
+      // const top_layer_face_lookup = { 0: "blue", 2: "orange", 6: null, 8: "green" };
+      if (cube[1][0] === `white_0`) {
         return moveList("F U F'");
-      } else if (cube[5][0] === "white_6") {
+      } else if (cube[5][0] === "white_0") {
         return moveList("F' U' F", "blue");
-      } else if (cube[1][2] === "white_8") {
+      } else if (cube[1][2] === "white_2") {
         return moveList("F' U' F");
-      } else if (cube[4][0] === "white_8") {
+      } else if (cube[4][0] === "white_2") {
         return moveList("F U F'", "green");
-      } else if (cube[4][2] === "white_2") {
+      } else if (cube[4][2] === "white_8") {
         return moveList("F' U' F", "green");
-      } else if (cube[3][0] === "white_2") {
+      } else if (cube[3][2] === "white_8") {
         return moveList("F U F'", "orange");
-      } else if (cube[3][2] === "white_0") {
+      } else if (cube[3][0] === "white_6") {
         return moveList("F' U' F", "orange");
-      } else if (cube[5][2] === "white_0") {
+      } else if (cube[5][2] === "white_6") {
         return moveList("F U F'", "blue");
       } else {
         console.log("rotate piece to correct position");
@@ -92,24 +106,39 @@ const rotate_corner_from_face = () => {
       let bottom_layer = check_cube_by_layer("white", 3);
       let center = cube[bottom_layer][4].split("_")[0];
       let idx = cube[bottom_layer].indexOf(`white_${i}`);
-      console.log(idx % 3);
+      console.log(idx % 3, cube[bottom_layer]);
       if (idx >= 6) {
         console.log(
           "remove from bottom layer",
           face_conversion[bottom_layer],
           cube[bottom_layer].indexOf(`white_${i}`)
         );
-        if (idx % 3 === 0 && !center.includes("blue")) {
+        if (
+          idx % 3 === 0 &&
+          !center.includes("orange") &&
+          !center.includes("blue")
+        ) {
           console.log("cw", center);
           return moveList("F U F'", center);
-        } else if (idx % 3 !== 0 && !center.includes("blue")) {
+        } else if (
+          idx % 3 !== 0 &&
+          !center.includes("orange") &&
+          !center.includes("blue")
+        ) {
           return moveList("F' U' F", center);
-        } else if (idx % 3 !== 0 && center.includes("blue")) {
-          return moveList("F U F'", center);
-        } else if (idx % 3 === 0 && center.includes("blue")) {
+        } else if (
+          (idx % 3 === 0 && center.includes("orange")) ||
+          (idx % 3 === 0 && center.includes("blue"))
+        ) {
+          console.log("edge case: ", i, center);
+          return moveList("F' U F", center);
+        } else if (
+          (idx % 3 !== 0 && center.includes("orange")) ||
+          (idx % 3 !== 0 && center.includes("blue"))
+        ) {
           console.log("rip", idx, center);
           // noLoop();
-          return moveList("F' U' F", center);
+          return moveList("F U' F'", center);
         }
       }
     }
@@ -140,7 +169,7 @@ const rotate_corner_from_face = () => {
     // } else if (cube[1][0] === "white_6") {
     //   moveList("F U F'");
     // } else if (cube[5][0] === "white_0") {
-    //   moveList("F U F'", "blue");
+    //   moveList("F U F'", "ort");
     // } else if (cube[3][0] === "white_2") {
     //   moveList("F U F'", "orange");
     // }
@@ -163,23 +192,20 @@ const check_cube_by_layer = (color, layer) => {
     }
   }
 };
-const solve_corners = () => {
-  // rotate_corner_from_top_layer();
-  rotate_corner_from_face();
-};
+
 const remove_corner_from_bottom_layer = () => {
   for (let i = 0; i < 9; i++) {
     if (cube[2][i] !== `white_${i}` && cube[2][i].includes("white")) {
       console.log("bottom layer", i);
       if (i === 0 || i === 6) {
-        if (i === 6) {
+        if (i === 0) {
           console.log("remove corner 6");
           return moveList("L U L'");
         } else {
           return moveList("L' U L");
         }
       } else {
-        if (i === 8) {
+        if (i === 2) {
           return moveList("R U R'");
         } else {
           console.log("r bottom");

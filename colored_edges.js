@@ -14,16 +14,16 @@ const solve_colored_edges = () => {
               cube[i][1] !== `${center}_${j}` &&
               cube[i][j] !== `${center}_${j}`
             ) {
-              console.log("rotate edge in position", i, center + "_" + j);
+              // console.log("rotate edge in position", i, center + "_" + j);
               moveList("U");
             }
             if (cube[i][1] == `${center}_3`) {
-              center != "blue"
+              center !== "blue" && center !== "orange"
                 ? moveList(left_algorithm, center)
                 : moveList(right_algorithm, center);
               console.log("left", `${center}_${j}`, cube[i]);
             } else if (cube[i][1] == `${center}_5`) {
-              center != "blue"
+              center !== "blue" && center !== "orange"
                 ? moveList(right_algorithm, center)
                 : moveList(left_algorithm, center);
               console.log("right", `${center}_${j}`, cube[i]);
@@ -48,7 +48,7 @@ const solve_colored_edges = () => {
               i,
               cube[i]
             );
-            center !== "blue"
+            center !== "blue" && center !== "orange"
               ? moveList(left_algorithm, center)
               : moveList(right_algorithm, center);
           } else if (cube[i][5] !== `${center}_5`) {
@@ -57,7 +57,7 @@ const solve_colored_edges = () => {
               `${center}_${j}`,
               cube[i]
             );
-            center !== "blue"
+            center !== "blue" && center !== "orange"
               ? moveList(right_algorithm, center)
               : moveList(left_algorithm, center);
           }

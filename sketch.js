@@ -6,8 +6,9 @@ let solved_yellow_edges;
 let solved_yellow_corners;
 let solved_cube = true;
 let first_rotation = false;
+let scramble_moves = [];
 function setup() {
-  frameRate(60);
+  frameRate(5);
   createCanvas(window.innerWidth - 8, window.innerHeight - 58, WEBGL);
   // drawCube();
   // button = createButton("scramble");
@@ -19,6 +20,31 @@ function setup() {
     return false;
   };
   solved_cross = false;
+  // moveList([
+  //   "R",
+  //   "R",
+  //   "F'",
+  //   "R",
+  //   "R",
+  //   "U'",
+  //   "U'",
+  //   "R",
+  //   "B'",
+  //   "B",
+  //   "U",
+  //   "U",
+  //   "B",
+  //   "B'",
+  //   "D'",
+  //   "L'",
+  //   "F",
+  //   "R'",
+  //   "D",
+  //   "U",
+  // ]);
+  // moveList("M M U M M U M' U U M M U U M' U U");
+  // M M U M M U M' U U M M U U M' U U
+  moveList("U");
   for (let i = 0; i < 20; i++) {
     if (!testing) {
       // scramble(1);
@@ -42,24 +68,43 @@ const cross_button = () => {
 };
 const white_corners_button = () => {
   while (!solved_white_corners) {
-    solve_corners();
+    if (!solved_cross) {
+      cross_button();
+    } else {
+      solve_white_corners();
+    }
   }
 };
 const f2l_button = () => {
+  let i = 0;
   while (!solved_f2l) {
-    solve_colored_edges();
+    if (!solved_white_corners) {
+      console.log("run corners");
+      white_corners_button();
+    } else {
+      solve_colored_edges();
+    }
   }
 };
 const oll_button = () => {
   while (!solved_yellow_edges) {
+    if (!solved_f2l) {
+      f2l_button();
+    }
     solve_yellow_edges();
   }
   while (!solved_yellow_corners) {
+    if (!solved_yellow_edges) {
+      solve_yellow_edges();
+    }
     solve_yellow_corners();
   }
 };
 const pll_button = () => {
-  while (arrays[0][0].join("") !== cube[0].join("")) {
+  if (!solved_yellow_corners) {
+    oll_button();
+  }
+  if (arrays[0][0].join("") !== cube[0].join("")) {
     solve_final_face();
   }
 };
@@ -68,6 +113,59 @@ const solve_cube = () => {
 };
 // console.log(moves);
 let d = 0;
+const move_shortener = () => {
+  let new_moves = [];
+  let test_moves = [
+    "U",
+    "U",
+    "L",
+    "U",
+    "U'",
+    "U",
+    "U",
+    "U",
+    "U",
+    "U",
+    "U",
+    "U",
+  ];
+  for (let i = 0; i < moves.length; i++) {
+    ac_move = moves[i].split("'").length > 1;
+    if (
+      (i < moves.length - 1 &&
+        moves[i].split("'").length > 1 &&
+        moves[i + 1].split("'").length < 1) ||
+      (i < moves.length - 1 &&
+        moves[i + 1].split("'").length > 1 &&
+        moves[i].split("'").length < 1)
+    ) {
+      i += 1;
+    }
+
+    // 3 consecutive turns is one anti clockwise turn
+    if (moves[i] === moves[i + 1] && moves[i] === moves[i + 2]) {
+      if (moves[i].split("'").length > 1) {
+        new_moves.push(moves[i].split[0]);
+      } else {
+        new_moves.push(`${moves[i].split[0]}'`);
+      }
+      i += 2;
+    }
+    // else if (moves[i] === moves[i + 1]) {
+    //   ac_move
+    //     ? new_moves.push(`${moves[i].split("'")[0]}2'`)
+    //     : new_moves.push(`${moves[i]}2`);
+    //   i += 1;
+    // }
+    else {
+      new_moves.push(moves[i]);
+    }
+  }
+  // test_moves.forEach((x, i) => {
+  //   console.log(x);
+  // });
+  console.log(new_moves);
+};
 function draw() {
   background(200);
   // rotateY(frameCount * 0.01);
@@ -84,7 +182,7 @@ function draw() {
       // line_edges_up()
     } else if (!solved_white_corners) {
       // console.log(cube);
-      solve_corners();
+      solve_white_corners();
     } else if (!solved_f2l) {
       solve_colored_edges();
     } else if (!solved_yellow_edges) {
@@ -120,7 +218,7 @@ const pink_check = () => {
   //   (cub[2][1] === "pink" && cub[3][7] !== "purple") ||
   //   (cub[2][3] === "pink" && cub[5][7] !== "purple")
   // );
-  return cub[2][0] === "white_0" && !cub[5][8].includes("blue");
+  return cub[2][0] === "white_0" && !cub[5][6].includes("blue");
 };
 const drafwCube = () => {
   let sqWidth = 100;
@@ -241,7 +339,7 @@ function drawCube() {
         push();
         translate((j % 3) * r * 2 - offset, r * 4 - offset, -y + offset);
         beginShape();
-        fill(arrays[d][i][8 - j].split("_")[0]);
+        fill(arrays[d][i][j].split("_")[0]);
         strokeWeight(2);
         vertex(-r, r, -r);
         vertex(-r, r, r);
@@ -254,7 +352,7 @@ function drawCube() {
         push();
         translate((j % 3) * r * 2 - offset, y - offset, -r * 4 + offset);
         beginShape();
-        fill(arrays[d][i][8-j].split("_")[0]);
+        fill(arrays[d][i][j].split("_")[0]);
         strokeWeight(2);
         vertex(-r, -r, -r);
         vertex(-r, r, -r);
