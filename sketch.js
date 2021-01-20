@@ -8,7 +8,7 @@ let solved_cube = true;
 let first_rotation = false;
 let scramble_moves = [];
 function setup() {
-  frameRate(5);
+  frameRate(60);
   createCanvas(window.innerWidth - 8, window.innerHeight - 58, WEBGL);
   // drawCube();
   // button = createButton("scramble");
