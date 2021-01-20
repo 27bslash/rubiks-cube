@@ -153,10 +153,12 @@ if (testing) cube = test_cube;
 arrays.push(cube.map((arr) => arr.slice()));
 // console.log(arrays);
 // ToDO visualize scramble in 2d
-const rotate = (direction, lane) => {
+const rotate = (direction, display_moves, scramble_mves) => {
   const prev = cube.map((arr) => arr.slice());
   // console.log(direction, /[EMS]/g.test(direction));
-  moves.push(direction);
+  // console.log(display_moves);
+  if (!display_moves) moves.push(direction);
+  let lane;
   let middle_layer_test = /[EMS]/g.test(direction);
   if (middle_layer_test) lane = 2;
   // console.log(direction, lane, cube, prev);
@@ -274,9 +276,11 @@ const rotate = (direction, lane) => {
       cube[3][j] = prev[2][num_to_reverse - j];
     }
   }
-  arrays.push(cube.map((arr) => arr.slice()));
+  if (display_moves || scramble_mves) {
+    arrays.push(cube.map((arr) => arr.slice()));
+    depth++;
+  }
   // console.log(arrays);
-  depth++;
 };
 
 function scramble(num) {
@@ -289,8 +293,9 @@ function scramble(num) {
   solved_f2l = false;
   solved_yellow_edges = false;
   solved_yellow_corners = false;
-  solved_cube = true;
+  solved_cube = false;
   daisy = false;
+
   let i = 0;
   while (i < num) {
     let direction_idx = Math.floor(Math.random() * (11 - 0 + 1) + 0);
@@ -309,7 +314,7 @@ function scramble(num) {
       "B",
       "B'",
     ];
-    rotate(directions[direction_idx]);
+    rotate(directions[direction_idx], null, true);
     scramble_moves.push(directions[direction_idx]);
     if (pink_check()) {
       // console.log(directions[direction_idx]);
@@ -318,24 +323,8 @@ function scramble(num) {
     i++;
   }
   moves = [];
+  // moveList(scramble_moves)
 }
-
-const blackCross = () => {
-  let end = [0, "black", 0, "white", "white", "white", 0, "white", 0];
-  console.log(cube[2][1], end[1], cube);
-  let filtered = [];
-  for (let i = 0; i < cube[2].length; i++) {
-    if (cube[2][i] != "white") {
-      filtered.push(0);
-    } else {
-      filtered.push("white");
-    }
-  }
-  // console.log(filtered);
-
-  // console.log(cube);
-  // console.log(moves);
-};
 
 const checkCross = () => {
   let cross = [0, "white", 0, "white", "white", "white", 0, "white", 0];
@@ -363,14 +352,18 @@ const checkCross = () => {
   // console.log(cross, filtered);
   return cross.join() === filtered.join() || solved_cross === true;
 };
-const moveList = (mList, face) => {
+const moveList = (mList, face, display_moves) => {
   // console.log(Array.isArray(mList));
   if (!Array.isArray(mList)) {
     mList = mList.split(" ");
   }
   for (let move of mList) {
+    if (move.includes("2")) {
+      rotate(move.replace("2", ""));
+      rotate(move.replace("2", ""));
+    }
     move = move_translator(face, move);
-    rotate(move);
+    rotate(move, display_moves);
   }
 };
 

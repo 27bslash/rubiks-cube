@@ -23,6 +23,11 @@ const get_empty_edges = () => {
 
 const rotate_top_layer = (face, i) => {
   console.log(face, i);
+  if (checkCross()) {
+    daisy = true;
+    solved_cross = true;
+    return;
+  }
   if (get_empty_edges().length > 0) {
     if (face.includes("green") || face.includes("blue")) {
       // console.log(i);
@@ -53,6 +58,7 @@ const rotate_top_layer = (face, i) => {
       }
     } else {
       if (i === 1 || i === 7) {
+        console.log("f");
         return face.includes("white")
           ? moveList("D'", face)
           : moveList("F", face);

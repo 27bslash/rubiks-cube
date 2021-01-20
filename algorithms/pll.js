@@ -1,5 +1,9 @@
 const solve_final_face = () => {
   // console.log(cube[0]);
+  if (!solved_cube && arrays[0][0].join("") === cube[0].join("")) {
+    solved_cube = true;
+    return;
+  }
   let wrong_corners = {};
   let wrong_edges = {};
   let corners = [0, 2, 6, 8];

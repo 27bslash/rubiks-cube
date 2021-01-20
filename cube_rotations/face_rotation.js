@@ -25,7 +25,6 @@ const rotate_array = (array, direction) => {
 };
 
 const rotate_face = (face, direction) => {
-  console.log("face: ", face);
   arr = spiral(face);
   arr = rotate_array(arr, direction);
   let res = [];
@@ -38,6 +37,5 @@ const rotate_face = (face, direction) => {
   for (let i = 6; i > 3; i--) {
     res.push(arr[i]);
   }
-  console.log(res);
   return res;
 };
