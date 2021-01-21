@@ -24,6 +24,7 @@ function setup() {
   angleMode(DEGREES);
 }
 const scramble_button = () => {
+  scramble_moves = [];
   for (let i = 0; i < 20; i++) {
     if (!testing) {
       scramble(1);
