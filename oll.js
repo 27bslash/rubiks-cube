@@ -11,12 +11,10 @@ const check_yellow_pieces = (start) => {
       cubelets.push(i);
     }
   }
-  // console.log(cubelets);
   return cubelets;
 };
 const solve_yellow_edges = () => {
   const yellow_edges = check_yellow_pieces(1);
-  // console.log(yellow_edges);
   if (solved_yellow_edges) return;
   if (yellow_edges.length === 4) {
     solved_yellow_edges = true;
@@ -48,8 +46,7 @@ const solve_yellow_corners = () => {
   const yellow_corners = check_yellow_pieces(0);
   // amount of corners on faces other than yellow
   const corners_on_faces = Object.keys(check_faces_for_yellow_pieces()).length;
-  // console.log(Object.keys(check_faces_for_yellow_pieces()).length);
-  // console.log(yellow_corners);
+
   if (yellow_corners.length === 4) {
     solved_yellow_corners = true;
     return;

@@ -22,16 +22,13 @@ const get_empty_edges = () => {
 };
 
 const rotate_top_layer = (face, i) => {
-  console.log(face, i);
   if (get_empty_edges().length > 0) {
     if (face.includes("green") || face.includes("blue")) {
-      // console.log(i);
       if (i === 1 || i === 7) {
         if (
           (face.includes("green") && get_empty_edges().includes(5)) ||
           (face.includes("blue") && get_empty_edges().includes(3))
         ) {
-          console.log("1 or 7");
           return moveList("F", face);
         }
       } else if (i === 3) {
@@ -39,7 +36,6 @@ const rotate_top_layer = (face, i) => {
           return face.includes("green") ? moveList("F'") : moveList("F");
         }
         if (!check_edges(face, i)) {
-          // console.log("rotate top");
           return moveList("U");
         }
       } else if (i === 5) {
@@ -48,7 +44,6 @@ const rotate_top_layer = (face, i) => {
         }
       }
       if (!check_edges(face, i)) {
-        // console.log("rotate top");
         return moveList("U");
       }
     } else {
@@ -58,7 +53,6 @@ const rotate_top_layer = (face, i) => {
           : moveList("F", face);
       } else if (i === 3) {
         if (!check_edges(face, i)) {
-          // console.log("rotate top");
           return moveList("U");
         }
         if (check_edges(face, i)) {
@@ -68,7 +62,6 @@ const rotate_top_layer = (face, i) => {
         }
       } else if (i === 5) {
         if (!check_edges(face, i)) {
-          // console.log("rotate top");
           return moveList("U");
         }
         if (check_edges(face, i)) {
@@ -106,7 +99,6 @@ const line_edges_up = (edge) => {
   for (let i = 0; i < 6; i++) {
     if (i !== 0 && i !== 2) {
       for (let j = 1; j < cube[0].length; j += 2) {
-        // console.log(
         //   k,
         //   cube[2][j],
         //   cube[i][1].split("_")[0],
@@ -124,6 +116,5 @@ const line_edges_up = (edge) => {
   return moveList("U");
 };
 const rotate_cross = (face) => {
-  console.log(face);
   return moveList("F F", face);
 };

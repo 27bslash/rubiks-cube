@@ -151,16 +151,14 @@ let moves = [],
 const testing = false;
 if (testing) cube = test_cube;
 arrays.push(cube.map((arr) => arr.slice()));
-// console.log(arrays);
+
 // ToDO visualize scramble in 2d
 const rotate = (direction, lane) => {
   const prev = cube.map((arr) => arr.slice());
-  // console.log(direction, /[EMS]/g.test(direction));
+
   moves.push(direction);
   let middle_layer_test = /[EMS]/g.test(direction);
   if (middle_layer_test) lane = 2;
-  // console.log(direction, lane, cube, prev);
-  // console.log(direction);
   switch (direction) {
     case "U":
       lane = 1;
@@ -220,10 +218,7 @@ const rotate = (direction, lane) => {
       cube[3][j] = prev[4][num_to_reverse - j];
       cube[4][j] = prev[1][j];
       cube[5][j] = prev[3][j];
-      // wrong reeeeeeeeeeeeeeee
     } else if (direction === "D" || direction === "U" || direction === "E") {
-      // console.log("D", num_to_reverse - j);
-      // console.log(num_to_reverse, j);
       cube[1][j] = prev[4][j];
       cube[3][j] = prev[5][j];
       cube[4][j] = prev[3][num_to_reverse - j];
@@ -236,13 +231,11 @@ const rotate = (direction, lane) => {
     if (lane == 3) left_added = -6;
     if (lane == 2) left_added = 0;
     if (direction == "F" || direction === "B'" || direction === "S") {
-      // console.log(j, j + left_added, (j % 3) * 3 + added);
       cube[0][j] = prev[5][6 - (j % 3) * 3 + added];
       cube[2][j] = prev[4][6 - (j % 3) * 3 + added];
       cube[4][(j % 3) * 3 + added] = prev[0][j];
       cube[5][(j % 3) * 3 + added] = prev[2][j];
     } else if (direction == "F'" || direction === "B" || direction === "S'") {
-      // console.log(j, left_added, added);
       cube[2][j] = prev[5][(j % 3) * 3 + added];
       cube[0][j] = prev[4][(j % 3) * 3 + added];
       cube[4][6 - (j % 3) * 3 + added] = prev[2][j];
@@ -253,15 +246,9 @@ const rotate = (direction, lane) => {
     let num_to_reverse = (lane - 1 + 3) * 2,
       k_added = 10,
       k = j + 2;
-    // 1 > 10;
-    // 2 > 8;
-    // 3 > 6;
-    // 1 > j + 2;
-    // 1 > j;
-    // 1 > j - 2;
     if (lane === 3) (k_added = 6), (k = j - 2);
     if (lane === 2) (k_added = 8), (k = j);
-    // console.log(j, k_added, k_added - k);
+
     if (direction === "L" || direction === "R" || direction === "M") {
       cube[0][j] = prev[1][num_to_reverse - j];
       cube[1][j] = prev[2][j];
@@ -275,15 +262,11 @@ const rotate = (direction, lane) => {
     }
   }
   arrays.push(cube.map((arr) => arr.slice()));
-  // console.log(arrays);
+
   depth++;
 };
 
 function scramble(num) {
-  // console.log(idx, directions[idx]);
-  // let moves = Math.floor(Math.random() * (100 - 0 + 1) + 1);
-  // console.log("moves: ", moves);
-  // moves = 2;
   solved_cross = false;
   solved_white_corners = false;
   solved_f2l = false;
@@ -294,7 +277,6 @@ function scramble(num) {
   let i = 0;
   while (i < num) {
     let direction_idx = Math.floor(Math.random() * (11 - 0 + 1) + 0);
-    // console.log(direction_idx);
     let directions = [
       "U",
       "U'",
@@ -311,47 +293,19 @@ function scramble(num) {
     ];
     rotate(directions[direction_idx]);
     scramble_moves.push(directions[direction_idx]);
-    if (pink_check()) {
-      // console.log(directions[direction_idx]);
-    }
     // moves.push(directions[direction_idx]);
     i++;
   }
   moves = [];
 }
 
-const blackCross = () => {
-  let end = [0, "black", 0, "white", "white", "white", 0, "white", 0];
-  console.log(cube[2][1], end[1], cube);
-  let filtered = [];
-  for (let i = 0; i < cube[2].length; i++) {
-    if (cube[2][i] != "white") {
-      filtered.push(0);
-    } else {
-      filtered.push("white");
-    }
-  }
-  // console.log(filtered);
-
-  // console.log(cube);
-  // console.log(moves);
-};
-
 const checkCross = () => {
   let cross = [0, "white", 0, "white", "white", "white", 0, "white", 0];
   let edge = [0, 0, 0, 0, "orange", 0, 0, "orange", 0];
-  // console.log(cube[2][1], cross[1], cube);
+
   let edgeFilter = [];
   let filtered = [];
   for (let i = 0; i < 9; i++) {
-    // if (edge[i] === 0 && cube[3][i] === "orange") {
-    //   edgeFilter.push(0);
-    // }
-    // if (cube[3][i] !== "orange") {
-    //   edgeFilter.push(0);
-    // } else {
-    //   edgeFilter.push("orange");
-    // }
     if (cross[i] === 0 && cube[2][i].includes("white")) {
       filtered[i] = 0;
     } else if (!cube[2][i].includes("white")) {
@@ -360,11 +314,10 @@ const checkCross = () => {
       filtered[i] = "white";
     }
   }
-  // console.log(cross, filtered);
+
   return cross.join() === filtered.join() || solved_cross === true;
 };
 const moveList = (mList, face) => {
-  // console.log(Array.isArray(mList));
   if (!Array.isArray(mList)) {
     mList = mList.split(" ");
   }
@@ -374,7 +327,6 @@ const moveList = (mList, face) => {
   }
 };
 
-// moveList("F R U' R' U' R U R' F' R U R' U' R' F R F'");
 const count_occurances = (arr) => {
   flat = [];
   for (let face of cube) {
@@ -387,12 +339,7 @@ const count_occurances = (arr) => {
     {}
   );
 };
-for (let i = 0; i < 6; i++) {
-  // console.log(count_occurances(cube[i]));
-}
-// L' D F D'
-// moveList("F U D R L'");
-// console.log(arrays);
+
 const move_translator = (location, moves) => {
   switch (location) {
     case "green":
@@ -403,7 +350,6 @@ const move_translator = (location, moves) => {
       } else if (moves.includes("L")) {
         moves = moves.split("'").length > 1 ? "F" : "F'";
       } else if (moves.includes("B")) {
-        //    these have the highest chance of being wrong
         moves = moves.split("'").length > 1 ? "L" : "L'";
       }
       break;
@@ -415,11 +361,8 @@ const move_translator = (location, moves) => {
       } else if (moves.includes("L")) {
         moves = moves.split("'").length > 1 ? "B" : "B'";
       } else if (moves.includes("B")) {
-        //    these have the highest chance of being wrong
         moves = moves.split("'").length > 1 ? "R" : "R'";
       } else if (moves.includes("U")) {
-        //    these have the highest chance of being wrong
-        // moves = moves.split("'").length > 1 ? "U" : "U'";
       }
       break;
     case "orange":
@@ -436,7 +379,6 @@ const move_translator = (location, moves) => {
     default:
       return moves;
   }
-  // console.log(location, moves);
+
   return moves;
 };
-// moveList("F U F'",'blue')

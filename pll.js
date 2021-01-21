@@ -1,5 +1,4 @@
 const solve_final_face = () => {
-  // console.log(cube[0]);
   let wrong_corners = {};
   let wrong_edges = {};
   let corners = [0, 2, 6, 8];
@@ -13,20 +12,19 @@ const solve_final_face = () => {
       }
     }
   }
-  // console.log(wrong_corners);
+
   let amount_of_corners = Object.keys(wrong_corners).length;
   if (amount_of_corners === 4 && Object.keys(wrong_edges).length === 4) {
     console.log("comple");
     moveList("U");
   } else {
-    // console.log(amount_of_corners, Object.keys(wrong_edges).length);
     if (
       (cube[0][0] === "yellow_8" && cube[0][8] === "yellow_0") ||
       amount_of_corners === 4
     ) {
       console.log("corner swap green");
       moveList("F R U' R' U' R U R' F' R U R' U' R' F R F'", "green");
-      console.log(wrong_corners);
+
       // moveList("U");
       // moveList("F R U' R' U' R U R' F' R U R' U' R' F R F' U'");
       // opposite corners
@@ -35,7 +33,7 @@ const solve_final_face = () => {
       // opposite corners
       console.log("corner swap");
       moveList("F R U' R' U' R U R' F' R U R' U' R' F R F'");
-      console.log(wrong_corners);
+
       // moveList("U");
       // moveList("F R U' R' U' R U R' F' R U R' U' R' F R F' U'");
     } else if (cube[0][2] === "yellow_8" && cube[0][8] === "yellow_2") {
@@ -51,10 +49,10 @@ const solve_final_face = () => {
       console.log("headlights", "green");
       moveList("R U R' U' R' F R R U' R' U' R U R' F'", "green");
       // } else if (cube[0][6] === "yellow_0") {
-      //   console.log("3 case");
+
       //   moveList("R U R' U' R' F R R U' R' U' R U R' F'", "orange");
       // } else if (cube[0][2] === "yellow_0") {
-      //   console.log("3 case");
+
       //   moveList("R U R' U' R' F R R U' R' U' R U R' F'", "green");
       // } else if (cube[0][8] === "yellow_0") {
       //   moveList("F R U' R' U' R U R' F' R U R' U' R' F R F'");
@@ -87,22 +85,16 @@ const solve_final_face = () => {
       Object.keys(wrong_edges).length === 3 &&
       amount_of_corners === 0
     ) {
-      // console.log(wrong_edges,Object.keys(wrong_edges))
       let difference = edges.filter(
         (x) => +Object.keys(wrong_edges).indexOf("" + x) < 0
       );
       const face_lookup = { 1: "orange", 5: "blue", 7: "red", 3: "green" };
       let rotation_face = face_lookup[difference[0]];
       let opposite_face_lookup = { 1: 7, 7: 1, 3: 5, 5: 3 };
-      // console.log(
-      //   opposite_face_lookup[difference[0]],
-      //   cube[0][opposite_face_lookup[difference[0]]]
-      // );
       edge = opposite_face_lookup[difference[0]];
       edge_idx = cube[0][edge].split("_")[1];
       console.log("3 edges");
       moveList("R U' R U R U R U' R' U' R R", rotation_face);
     }
   }
-  // console.log(wrong_corners, wrong_edges);
 };

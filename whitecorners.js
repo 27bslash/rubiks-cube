@@ -81,24 +81,6 @@ const solve_white_corners = () => {
         console.log("rotate piece to correct position");
         return moveList("U");
       }
-      // if (cube[front_lookup[i]][2] === `white_${i}`) {
-      //   console.log("front", face_conversion[front_lookup[i]], 2);
-      //   return moveList("F U F'", face_conversion[front_lookup[i]]);
-      // } else if (cube[right_lookup[i]][0] === `white_${i}`) {
-      //   console.log("right");
-      //   if (face_conversion[right_lookup[i]] === "green") {
-      //     return moveList("F U' F'", "green");
-      //   } else {
-      //     return moveList("F' U' F", face_conversion[right_lookup[i]]);
-      //   }
-      // } else if (
-      //   (i !== 4 && cube[front_lookup[i]][idx_to_check] !== `white_${i}`) ||
-      //   cube[right_lookup[i]][idx_to_check] !== `white_${i}`
-      // ) {
-      //   console.log("rotate piece in top layer");
-      //   moveList("U");
-      //   // noLoop();
-      // }
     } else if (
       check_cube_by_layer("white", 3)
       // check_cube_by_layer("white", 3) !== -1
@@ -146,36 +128,7 @@ const solve_white_corners = () => {
     if (check_corners()) {
       solved_white_corners = true;
     }
-    // if (top_layer) {
-    //   console.log(cube[face_lookup[i]]);
-    //   if ( cube[face_lookup[i]][idx_to_check] === `white_${i}`) {
-    //     console.log("front");
-    //     return moveList("F U F'", face_conversion[face_lookup[i]]);
-    //   } else if (
-    //
-    //     cube[face_lookup[i]] !== 5 &&
-    //     cube[face_lookup[i]][idx_to_check] === `white_${i}`
-    //   ) {
-    //     console.log("right");
-    //     return moveList("L U' L'", face_conversion[face_lookup[i]]);
-    //   }
-    //   // moveList("U");
-    // } else if (check_cube_by_layer("white", 3)) {
-    //   // moveList("F U F'", face_conversion[face_lookup[i]]);
-    // }
-    // L' U' L
-    // if (cube[4][0] === "white_8") {
-    //   moveList("F U F'", "green");
-    // } else if (cube[1][0] === "white_6") {
-    //   moveList("F U F'");
-    // } else if (cube[5][0] === "white_0") {
-    //   moveList("F U F'", "ort");
-    // } else if (cube[3][0] === "white_2") {
-    //   moveList("F U F'", "orange");
-    // }
-    // moveList("U");
   }
-  // console.log(cube[2]);
 };
 const check_cube_by_layer = (color, layer) => {
   for (let i = 1; i < cube.length; i++) {
@@ -185,8 +138,6 @@ const check_cube_by_layer = (color, layer) => {
         !cube[i][4].includes("yellow") &&
         cube[i][j].includes(color)
       ) {
-        // return center of cube
-        // console.log("check cube by layer: ", i, j, cube[i]);
         return i;
       }
     }
@@ -215,7 +166,6 @@ const remove_corner_from_bottom_layer = () => {
     }
   }
 };
-// remove_corner_from_bottom_layer();
 const check_corners = () => {
   arr = [];
   for (let i = 0; i < 9; i++) {
