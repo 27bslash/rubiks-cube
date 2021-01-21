@@ -5,18 +5,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>Page Title</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" type="text/css" media="screen" href="main.css" />
     <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.min.js"></script>
     <script src="https://freshfork.github.io/p5.EasyCam/p5.easycam.min.js"></script>
-    <script src="face_rotation.js"></script>
-    <script src="cube.js"></script>
-    <script src="whitecross.js"></script>
-    <script src="whitecorners.js"></script>
-    <script src="colored_edges.js"></script>
-    <script src="oll.js"></script>
-    <script src="pll.js"></script>
+    <script src="cube_rotations/face_rotation.js"></script>
+    <script src="cube_rotations/cube.js"></script>
+    <script src="cube_algorithms/whitecross.js"></script>
+    <script src="cube_algorithms/whitecorners.js"></script>
+    <script src="cube_algorithms/colored_edges.js"></script>
+    <script src="cube_algorithms/oll.js"></script>
+    <script src="cube_algorithms/pll.js"></script>
     <script src="sketch.js"></script>
-
+  </head>
+  <body>
     <button onclick="scramble_button()">scramble</button>
     <button onclick="rotate('F')">front</button>
     <button onclick="rotate(`F'`)">front A</button>
@@ -40,6 +40,5 @@
     <button onclick="pll_button()">PLL</button>
     <button onclick="solve_cube()">Solve Cube</button>
     <button onclick="console.log(moves)">log</button>
-  </head>
-  <body></body>
+  </body>
 </html>
